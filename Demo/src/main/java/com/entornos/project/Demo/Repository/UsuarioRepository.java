@@ -1,4 +1,7 @@
 package com.entornos.project.Demo.Repository;
 
-public interface UsuarioRepository {
+import com.entornos.project.Demo.Model.Usuario;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 }
