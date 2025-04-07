@@ -42,7 +42,7 @@ public class Usuario {
     private LocalDate fechaCreacion= LocalDate.from(LocalDateTime.now());
 
     public enum Rol{
-        GERENTE, CLIENTE
+        gerente, cliente
     }
 
 }
