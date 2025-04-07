@@ -1,4 +1,4 @@
-package com.entornos.project.Demo.Service;
+package com.entornos.project.Demo.Service.interfaces;
 
 import com.entornos.project.Demo.Model.Usuario;
 

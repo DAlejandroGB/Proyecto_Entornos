@@ -1,4 +1,4 @@
-package com.entornos.project.Demo.DTO;
+package com.entornos.project.Demo.dto;
 
 import com.entornos.project.Demo.Model.Medicamento.Tipo;
 import lombok.*;
@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CrearMedicamentoRequest {
+public class CrearMedicamentoDTO {
 
     private String nombre;
     private Double precio;

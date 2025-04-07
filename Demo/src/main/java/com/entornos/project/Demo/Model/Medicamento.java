@@ -1,6 +1,5 @@
 package com.entornos.project.Demo.Model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,7 +29,7 @@ public class Medicamento {
     private Tipo tipo;
 
     public enum Tipo {
-        recetado, ventalibre
+        RECETADO, VENTALIBRE
     }
 
 }
