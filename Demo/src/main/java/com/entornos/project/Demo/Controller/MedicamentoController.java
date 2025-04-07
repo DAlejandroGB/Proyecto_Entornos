@@ -1,6 +1,6 @@
 package com.entornos.project.Demo.Controller;
 
-import com.entornos.project.Demo.dto.*;
+import com.entornos.project.Demo.DTO.*;
 import com.entornos.project.Demo.Service.impl.MedicamentoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
