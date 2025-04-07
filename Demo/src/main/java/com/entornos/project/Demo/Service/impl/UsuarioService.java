@@ -1,7 +1,8 @@
-package com.entornos.project.Demo.Service;
+package com.entornos.project.Demo.Service.impl;
 
 import com.entornos.project.Demo.Model.Usuario;
 import com.entornos.project.Demo.Repository.UsuarioRepository;
+import com.entornos.project.Demo.Service.interfaces.IUsuarioService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class UsuarioService implements IUsuarioService{
+public class UsuarioService implements IUsuarioService {
 
 
     @Autowired

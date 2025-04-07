@@ -1,4 +1,4 @@
-package com.entornos.project.Demo.DTO;
+package com.entornos.project.Demo.dto;
 
 import com.entornos.project.Demo.Model.Medicamento.Tipo;
 import lombok.*;

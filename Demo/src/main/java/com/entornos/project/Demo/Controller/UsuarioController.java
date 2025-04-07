@@ -1,7 +1,7 @@
 package com.entornos.project.Demo.Controller;
 
 import com.entornos.project.Demo.Model.Usuario;
-import com.entornos.project.Demo.Service.UsuarioService;
+import com.entornos.project.Demo.Service.impl.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

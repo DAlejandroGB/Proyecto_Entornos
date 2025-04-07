@@ -1,7 +1,7 @@
-package com.entornos.project.Demo.Service;
+package com.entornos.project.Demo.Service.impl;
 
 import com.entornos.project.Demo.Model.Medicamento;
-import com.entornos.project.Demo.DTO.*;
+import com.entornos.project.Demo.dto.*;
 import com.entornos.project.Demo.Repository.MedicamentoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class MedicamentoService {
                 .collect(Collectors.toList());
     }
 
-    public MedicamentoDTO agregar(CrearMedicamentoRequest request) {
+    public MedicamentoDTO agregar(CrearMedicamentoDTO request) {
         Medicamento medicamento = Medicamento.builder()
                 .nombre(request.getNombre())
                 .precio(request.getPrecio())
@@ -31,7 +31,7 @@ public class MedicamentoService {
         return toDTO(repository.save(medicamento));
     }
 
-    public MedicamentoDTO actualizar(Long id, CrearMedicamentoRequest request) {
+    public MedicamentoDTO actualizar(Long id, CrearMedicamentoDTO request) {
         Medicamento medicamento = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Medicamento no encontrado"));
 
