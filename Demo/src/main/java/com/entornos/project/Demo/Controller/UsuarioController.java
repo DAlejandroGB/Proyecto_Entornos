@@ -32,9 +32,9 @@ public class UsuarioController {
         return new ResponseEntity<>(obj, HttpStatus.CREATED);
     }
 
-    @PutMapping("/")
-    public ResponseEntity<Usuario> actualizarUsuario(@RequestBody Usuario usuario) {
-        Usuario obj = usuarioService.actualizarUsuario(usuario.getId(), usuario);
+    @PutMapping("/{id}")
+    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
+        Usuario obj = usuarioService.actualizarUsuario(id, usuario);
         if (obj == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

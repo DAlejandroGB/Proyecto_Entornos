@@ -39,13 +39,13 @@ public class UsuarioService implements IUsuarioService{
 
     @Override
     public Usuario actualizarUsuario(Long id, Usuario usuarioAct) {
-        return usuarioRepository.findById(id).map(usuario ->{
-            usuario.setNombre(usuarioAct.getNombre());
-            usuario.setApellido(usuarioAct.getApellido());
-            usuario.setEmail(usuarioAct.getEmail());
-            usuario.setTelefono(usuarioAct.getTelefono());
-            usuario.setDireccion(usuarioAct.getDireccion());
-            usuario.setRol(usuarioAct.getRol());
+        return usuarioRepository.findById(id).map(usuario -> {
+            if (usuarioAct.getNombre() != null) usuario.setNombre(usuarioAct.getNombre());
+            if (usuarioAct.getApellido() != null) usuario.setApellido(usuarioAct.getApellido());
+            if (usuarioAct.getEmail() != null) usuario.setEmail(usuarioAct.getEmail());
+            if (usuarioAct.getTelefono() != null) usuario.setTelefono(usuarioAct.getTelefono());
+            if (usuarioAct.getDireccion() != null) usuario.setDireccion(usuarioAct.getDireccion());
+            if (usuarioAct.getRol() != null) usuario.setRol(usuarioAct.getRol());
             return usuarioRepository.save(usuario);
         }).orElse(null);
     }
