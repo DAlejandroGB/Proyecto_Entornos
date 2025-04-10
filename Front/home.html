@@ -1,7 +1,66 @@
 <!DOCTYPE html>
+<html lang="en">
+
 <head>
-    <title>Pagina Principal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeFaltanPastillas</title>
+    <link rel="stylesheet" href="css/home.css">
 </head>
+
 <body>
-    JEJEJE XD
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>TeFaltan<br><span>Pastillas?</span></h2>
+            <nav>
+                <a href="usuario.html">Usuario</a>
+                <a href="credenciales.html">Credenciales</a>
+                <a href="medicamentos.html">Medicamentos</a>
+
+            </nav>
+            <div class="gerente-box">
+                <p>¿Eres Gerente de una Farmacia?</p>
+                <button>Regístrate</button>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="main">
+            <header class="top-bar">
+                <h1>Hola, Usuario</h1>
+                <input type="text" placeholder="¿Qué necesitas hoy?" />
+            </header>
+
+            <section class="products-section">
+                <h2>Todos los Medicamentos</h2>
+                <div class="products-grid" id="medicamentos-container">
+                    <!-- Aquí se insertarán dinámicamente los medicamentos -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Carrito -->
+        <aside class="carrito">
+            <div class="direccion">
+                <h3>Tu dirección</h3>
+                <p>Cra 12, No. 34-56</p>
+                <button>Cambiar</button>
+            </div>
+            <div class="orden">
+                <h3>Carrito</h3>
+                <ul id="lista-carrito">
+                    <!-- Ítems del carrito -->
+                </ul>
+                <div class="total">
+                    Total: <span id="total-carrito">0</span>
+                </div>
+                <button class="comprar">Comprar</button>
+            </div>
+        </aside>
+    </div>
+
+    <script src="js/home.js"></script>
 </body>
+
+</html>
