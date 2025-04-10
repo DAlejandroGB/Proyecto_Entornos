@@ -30,6 +30,8 @@ form.addEventListener('submit', async (e) => {
 
     try {
         let response;
+        let result;
+
         if (editandoId) {
             console.log('Editando usuario:', usuario);
             response= await fetch(`${API_URL}/${editandoId}`, {
@@ -40,8 +42,6 @@ form.addEventListener('submit', async (e) => {
                 },
                 body: JSON.stringify(usuario)
             });
-            const result = await response.json();
-            console.log('Resultado de la edición:', result);
 
         } else {
             console.log('Agregando usuario:', usuario);
@@ -54,11 +54,11 @@ form.addEventListener('submit', async (e) => {
                 body: JSON.stringify(usuario)
             });
         }
+        result = await response.json();
+        console.log('Resultado de la solicitud:', result);
 
         // Verifica si la respuesta es correcta (status 2xx)
         if (response.ok) {
-            const result = await response.json();
-            console.log('Resultado de la solicitud:', result);
             form.reset();
             cancelButton.style.display = 'none';
             editandoId = null;
