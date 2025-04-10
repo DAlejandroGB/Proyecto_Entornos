@@ -42,11 +42,11 @@ public class CredencialService implements ICredencialService {
 
     @Override
     public Credencial saveCredencial(Credencial credencial) {
-        return null;
+        return credencialRepository.save(credencial);
     }
 
     @Override
     public void eliminarCredencial(Credencial credencial) {
-
+        credencialRepository.delete(credencial);
     }
 }

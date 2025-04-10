@@ -20,6 +20,7 @@ public class CredencialController {
     public ResponseEntity<Credencial> credencial(@RequestBody Credencial credencial) {
         try {
             Credencial c= credencialService.saveCredencial(credencial);
+            System.out.println("Credencial credencial: "+ c);
             return new ResponseEntity<>(c, HttpStatus.CREATED);
         }catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
