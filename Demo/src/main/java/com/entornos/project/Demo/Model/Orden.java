@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Table
 @Entity(name = "ordenes")
@@ -26,11 +26,17 @@ public class Orden {
     @Enumerated(EnumType.STRING)
     private Estado estado;
     @Column(name = "fecha_creacion")
-    private LocalDate fechaCreacion;
+    private LocalDateTime fechaCreacion;
 
     //Relaciones
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", insertable = false, updatable = false)
     private Usuario usuario;
+
+    public Orden(Long idUsuario){
+        this.idUsuario = idUsuario;
+        this.fechaCreacion = LocalDateTime.now();
+        this.estado = Estado.PENDIENTE;
+    }
 }
