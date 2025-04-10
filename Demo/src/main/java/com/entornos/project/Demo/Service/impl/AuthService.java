@@ -8,6 +8,9 @@ import com.entornos.project.Demo.Repository.CredencialRepository;
 import com.entornos.project.Demo.Service.interfaces.IAuthService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import java.util.Date;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import java.util.Optional;
 
@@ -42,10 +45,14 @@ public class AuthService implements IAuthService {
 
     private String generarJWT(Credencial credencial) {
         Algorithm algorithm = Algorithm.HMAC256(jwtSecret);
+        Instant now = Instant.now();
+        Date expire = Date.from(now.plus(1, ChronoUnit.DAYS));
 
         return JWT.create()
                 .withSubject(credencial.getUsuarioNombre())
                 .withIssuer("auth0")
+                .withIssuedAt(Date.from(now))
+                .withExpiresAt(expire)
                 .sign(algorithm);
     }
 
