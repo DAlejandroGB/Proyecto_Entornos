@@ -15,9 +15,7 @@ import java.sql.Timestamp;
 
 
 @Entity
-@Table(
-        name = "credenciales"
-)
+@Table(name = "credenciales")
 @Data
 public class Credencial {
     public static final String NAME = "credenciales";
@@ -29,23 +27,27 @@ public class Credencial {
             name = "credencial_id"
     )
     private Long credencialId;
+
     @ManyToOne
     @JoinColumn(
             name = "usuario_id",
             nullable = false
     )
     private Usuario usuario;
+
     @Column(
             name = "usuario",
             nullable = false,
             unique = true
     )
     private String usuarioNombre;
+
     @Column(
             name = "contrasena",
             nullable = false
     )
     private String contrasena;
+
     @Column(
             name = "fecha_creacion",
             nullable = false,
