@@ -59,7 +59,6 @@ public class UsuarioController {
     public ResponseEntity<String> login(@RequestParam String usuarioNombre, @RequestParam String contrasena) {
         try {
             String token = this.authService.login(usuarioNombre, contrasena);
-            System.out.println(token);
             return ResponseEntity.ok(token);
         } catch (RuntimeException e) {
             return ResponseEntity.status(401).body(e.getMessage());
