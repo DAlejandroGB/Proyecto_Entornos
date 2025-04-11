@@ -134,3 +134,17 @@ async function eliminarMedicamento(id) {
         alert('Error al eliminar el medicamento.');
     }
 }
+
+document.getElementById('buscarMedicamento').addEventListener('input', function () {
+    const filtro = this.value.toLowerCase();
+    const filas = document.querySelectorAll('#medicamento-table-body tr');
+
+    filas.forEach(fila => {
+        const nombre = fila.children[1].textContent.toLowerCase(); // Columna de Nombre
+        if (nombre.includes(filtro)) {
+            fila.style.display = '';
+        } else {
+            fila.style.display = 'none';
+        }
+    });
+});
