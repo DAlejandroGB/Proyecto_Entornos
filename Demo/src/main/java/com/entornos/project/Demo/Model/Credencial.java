@@ -11,7 +11,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -53,5 +54,5 @@ public class Credencial {
             nullable = false,
             updatable = false
     )
-    private Timestamp fechaCreacion;
+    private LocalDate fechaCreacion = LocalDate.from(LocalDateTime.now());;
 }

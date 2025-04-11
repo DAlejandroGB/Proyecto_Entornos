@@ -3,6 +3,7 @@ package com.entornos.project.Demo.Security;
 import com.entornos.project.Demo.Service.impl.AuthService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -30,7 +31,8 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)  // Deshabilitamos CSRF (útil para JWT)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/usuarios/login", "/usuarios/verify","/credencial/","/credencial/list").permitAll()  // Rutas públicas
+                        .requestMatchers("/usuarios/login", "/usuarios/","/credencial/").permitAll()  // Rutas públicas
+                        .requestMatchers(HttpMethod.DELETE, "/usuarios/*").permitAll()
                         .anyRequest().authenticated()  // Rutas protegidas
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(authService), UsernamePasswordAuthenticationFilter.class);  // Filtro JWT

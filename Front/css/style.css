@@ -54,3 +54,51 @@ input.form-check-input:checked {
     background-color: #d38d00;
     border-color: #a86f00;
 }
+
+.d-flex {
+    display: block;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.form-container h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-container input,
+.form-container select {
+    width: 100%;
+    padding: 0.8rem;
+    margin: 0.8rem 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.form-container button {
+    width: 100%;
+    padding: 0.8rem;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#cancelar-edicion {
+    background: #f44336;
+}
+
+.modal-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
