@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,14 +8,16 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
   <div class="login-container d-flex flex-row">
     <div class="login-left col-md-6">
-      <h3 class="login-title mb-4"><span style="color: green;">¿</span>TeFaltanPastillas<span style="color: green;">?</span></h3>
+      <h3 class="login-title mb-4"><span style="color: green;">¿</span>TeFaltanPastillas<span
+          style="color: green;">?</span></h3>
       <form class="login-form">
         <div class="mb-3">
           <label for="nombreUsuario" class="form-label">Nombre de Usuario/Email</label>
-          <input type="text" id="nombreUsuario" class="form-control" placeholder="robert.langster@gmail.com" >
+          <input type="text" id="nombreUsuario" class="form-control" placeholder="robert.langster@gmail.com">
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
@@ -28,11 +31,83 @@
           <a href="#" class="text-sm">Forgot password?</a>
         </div>
         <div class="d-flex gap-3">
-          <button  id="btnLogin" type="submit" class="btn btn-login px-4" onclick=login()>Login</button>
-          <button type="button" class="btn btn-outline-warning px-4">Sign Up</button>
+          <button id="btnLogin" type="submit" class="btn btn-login px-4" onclick=login()>Login</button>
+
+          <button type="button" class="btn btn-outline-warning px-4" data-bs-toggle="modal"
+            data-bs-target="#exampleModalToggle">
+            Sign Up
+          </button>
+
         </div>
-        <p class="mt-4 text-sm">¿No tienes una cuenta? <a href="#">Crear una cuenta</a></p>
+        <!--<p class="mt-4 text-sm">¿No tienes una cuenta? <a href="#">Crear una cuenta</a></p>-->
       </form>
+      <!-- Modal 1: Usuario -->
+      <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
+        tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Registrar Datos de Usuario</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="form-container">
+                <h2 id="form-title">Agregar Usuario</h2>
+                <form id="usuario-form">
+                  <input type="hidden" id="usuario-id" />
+                  <input type="text" id="nombre" placeholder="Nombre" required />
+                  <input type="text" id="apellido" placeholder="Apellido" required />
+                  <input type="email" id="email" placeholder="Email" required />
+                  <input type="text" id="telefono" placeholder="Teléfono" />
+                  <input type="text" id="direccion" placeholder="Dirección" />
+                  <select id="rol" required>
+                    <option value="">Seleccione Rol</option>
+                    <option value="gerente">Gerente</option>
+                    <option value="cliente">Cliente</option>
+                  </select>
+                  <button type="submit">Siguiente</button>
+                </form>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <!--<button class="btn btn-primary" data-bs-dismiss="modal" data-bs-toggle="modal"
+              data-bs-target="#exampleModalToggle2">
+              Open second modal
+            </button>-->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal 2: Credenciales -->
+      <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2"
+        tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Registrar Credenciales</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick=deleteIncompleteUser()></button>
+            </div>
+            <div class="modal-body">
+              <div class="form-container">
+                <h2>Ingrese sus credenciales</h2>
+                <form id="credencial-form" onsubmit="registrarCredencial(event)">
+                  <input type="text" id="usuarioNombre" placeholder="Nombre de Usuario" required />
+                  <input type="password" id="contrasena" placeholder="Contraseña" required />
+                  <button type="submit" class="btn btn-success w-100 mt-3">Guardar Credencial</button>
+                </form>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button class="btn btn-outline-danger" id="cancelar-credencial" data-bs-dismiss="modal" onclick=deleteIncompleteUser()>
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
     <div class="illustration col-md-6">
       <img src="images\fondo_login.jpg" alt="Medicinas">
@@ -42,4 +117,5 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/login.js"></script>
 </body>
+
 </html>

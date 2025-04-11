@@ -32,9 +32,9 @@ public class CredencialController {
         return credencialService.listarCredenciales();
     }
 
-    @GetMapping("/list/{idUsuario}")
-    public Credencial searchCredencial(@PathVariable Long idUsuario) {
-        return credencialService.buscarCredencial(idUsuario);
+    @GetMapping("/list/{id}")
+    public Credencial searchCredencial(@PathVariable Long id) {
+        return credencialService.getCredencial(id);
     }
 
     @PutMapping("/")

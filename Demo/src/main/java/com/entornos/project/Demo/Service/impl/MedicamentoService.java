@@ -56,4 +56,11 @@ public class MedicamentoService {
                 .build();
     }
 
+    public MedicamentoDTO obtenerPorId(Long id) {
+        Medicamento medicamento = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Medicamento no encontrado con ID: " + id));
+        return toDTO(medicamento);
+    }
+
+
 }

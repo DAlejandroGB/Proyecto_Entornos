@@ -290,4 +290,30 @@ function actualizarTotal() {
     } else {
         console.warn("Elemento con id 'total-carrito' no encontrado.");
     }
+<<<<<<< HEAD
+=======
+}
+
+function agregarMedicamentoCarrito(evento) {
+    const botonMedicamento = evento.target;
+    const idMedicamento = botonMedicamento.dataset.id;
+    const precioMedicamento = botonMedicamento.parentElement.querySelector("p:nth-child(3)").innerHTML;
+    carrito.push({
+        id: idMedicamento,
+        precio: precioMedicamento
+    });
+    actualizarTotal();
+}
+
+function removerMedicamentoCarrito(evento) {
+    const botonMedicamento = evento.target;
+    const idMedicamento = botonMedicamento.dataset.id;
+    const index = carrito.findIndex(elemento => elemento.id === idMedicamento);
+    carrito.splice(index, 1);
+    actualizarTotal();
+}
+function cerrarSesion() {
+    localStorage.clear();
+    window.location.href = 'index.html'; // o la página de login
+>>>>>>> b6413e0eb643808766199a0d4b02d1c5daf0cfe3
 }
