@@ -81,7 +81,10 @@ async function login() {
     });
     console.log(response)
     if (!response.ok) {
+      alert(`Login incorrecto: Credenciales no validas `);
+      window.location = 'index.html'
       throw new Error(`Error: ${response.status}`);
+      
     }
 
     const data = await response.text();

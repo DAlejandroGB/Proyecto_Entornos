@@ -9,19 +9,29 @@ if (!token) {
 }
 
 let edit = null;
+let user = null;
 
 document.addEventListener('DOMContentLoaded', cargarCredenciales);
 
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const res = await fetch(`http://localhost:8080/usuarios/list/${form.usuarioId.value}`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    });
-    const user = await res.json();
 
     try {
+        const res = await fetch(`http://localhost:8080/usuarios/list/${form.usuarioId.value}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        try {
+            user = await res.json();
+        }
+        catch (error) {
+            alert('Usuario no encontrado. Verifica en la sección de usuarios');
+            window.location = 'usuario.html';
+
+        }
+        console.log(user)
         let response;
         if (edit) {
             const credencial = {
