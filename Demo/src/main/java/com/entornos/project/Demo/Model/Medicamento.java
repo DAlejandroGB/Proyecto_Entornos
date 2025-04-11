@@ -29,7 +29,7 @@ public class Medicamento {
     private Tipo tipo;
 
     public enum Tipo {
-        RECETADO, VENTALIBRE
+        recetado, ventalibre
     }
 
 }
