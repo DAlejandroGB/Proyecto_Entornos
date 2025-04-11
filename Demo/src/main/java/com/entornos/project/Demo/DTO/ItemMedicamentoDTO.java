@@ -1,4 +1,4 @@
-package com.entornos.project.Demo.dto;
+package com.entornos.project.Demo.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

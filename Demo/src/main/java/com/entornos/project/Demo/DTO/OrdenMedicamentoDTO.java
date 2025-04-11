@@ -1,4 +1,4 @@
-package com.entornos.project.Demo.dto;
+package com.entornos.project.Demo.DTO;
 
 import com.entornos.project.Demo.Model.OrdenMedicamento;
 import lombok.AllArgsConstructor;

@@ -1,8 +1,8 @@
 package com.entornos.project.Demo.Controller;
 
 import com.entornos.project.Demo.Service.interfaces.IOrdenService;
-import com.entornos.project.Demo.dto.OrdenDTO;
-import com.entornos.project.Demo.dto.OrdenMedicamentoDTO;
+import com.entornos.project.Demo.DTO.OrdenDTO;
+import com.entornos.project.Demo.DTO.OrdenMedicamentoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

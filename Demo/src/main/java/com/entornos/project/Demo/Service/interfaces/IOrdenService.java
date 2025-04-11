@@ -1,7 +1,7 @@
 package com.entornos.project.Demo.Service.interfaces;
 
-import com.entornos.project.Demo.dto.OrdenDTO;
-import com.entornos.project.Demo.dto.OrdenMedicamentoDTO;
+import com.entornos.project.Demo.DTO.OrdenDTO;
+import com.entornos.project.Demo.DTO.OrdenMedicamentoDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
