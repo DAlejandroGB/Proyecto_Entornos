@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Credenciales</title>
+    <link rel="stylesheet" href="css/credenciales.css" />
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>TeFaltan<br><span>Pastillas?</span></h2>
+            <nav>    
+                <a href="home.html">Inicio</a>
+                <a href="usuario.html">Usuarios</a>
+                <a href="medicamentos.html">Medicamentos</a>
+            </nav>
+            <div class="gerente-box">
+                <p>¿Eres Gerente de una Farmacia?</p>
+                <button>Regístrate</button>
+            </div>
+            <div class="logout-box">
+                <a href="#" onclick="cerrarSesion()" class="logout-link">Cerrar Sesión</a>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="main">
+            <header class="top-bar">
+                <h1>Gestión de Credenciales</h1>
+                <input type="text" placeholder="Buscar credencial..." />
+            </header>
+
+            <section class="users-section">
+                <!-- Formulario -->
+                <div class="form-container">
+                    <h2 id="form-title">Agregar Credencial</h2>
+                    <form id="credencial-form">
+                        <input type="hidden" id="credencial_id" alt=0/>
+                        <input type="text" id="username" placeholder="Nombre de Usuario" required />
+                        <input type="text" id="password" placeholder="Contraseña" required />
+                        <input type="number" id="usuarioId" placeholder="ID del Usuario" required />
+                        <button type="submit">Guardar</button>
+                        <button type="reset" id="cancelar-edicion" style="display:none;">Cancelar</button>
+                    </form>
+                </div>
+
+                <!-- Tabla -->
+                <div class="table-container">
+                    <h2>Lista de Credenciales</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>ID Usuario</th>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>Creation Date</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="credencial-table-body">
+                            <!-- JS insertará aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/credenciales.js"></script>
+</body>
+</html>

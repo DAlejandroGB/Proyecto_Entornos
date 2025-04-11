@@ -148,3 +148,7 @@ document.getElementById('buscarMedicamento').addEventListener('input', function 
         }
     });
 });
+function cerrarSesion() {
+    localStorage.clear();
+    window.location.href = 'index.html'; // o la página de login
+}

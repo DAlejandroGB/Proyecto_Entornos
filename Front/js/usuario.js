@@ -148,3 +148,7 @@ async function eliminarUsuario(id) {
     });
     cargarUsuarios();
 }
+function cerrarSesion() {
+    localStorage.clear();
+    window.location.href = 'index.html'; // o la página de login
+}
