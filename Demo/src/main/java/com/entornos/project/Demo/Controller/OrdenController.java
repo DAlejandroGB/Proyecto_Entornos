@@ -1,5 +1,7 @@
 package com.entornos.project.Demo.Controller;
 
+import com.entornos.project.Demo.Model.Orden;
+import com.entornos.project.Demo.Model.OrdenMedicamento;
 import com.entornos.project.Demo.Service.interfaces.IOrdenService;
 import com.entornos.project.Demo.DTO.OrdenDTO;
 import com.entornos.project.Demo.DTO.OrdenMedicamentoDTO;
@@ -28,7 +30,7 @@ public class OrdenController {
     }
 
     @PostMapping("addMedicamento")
-    public ResponseEntity<OrdenMedicamentoDTO> addMedicamento(@RequestBody OrdenMedicamentoDTO ordenMedicamentoDTO, @RequestPart(name = "imagen") MultipartFile imagen,@RequestParam(name = "idUsuario") Long idUsuario) throws IOException {
+    public ResponseEntity<OrdenMedicamentoDTO> addMedicamento(@RequestBody OrdenMedicamentoDTO ordenMedicamentoDTO, @RequestPart(name = "imagen", required = false) MultipartFile imagen,@RequestHeader(name = "idUsuario") Long idUsuario) throws IOException {
         OrdenMedicamentoDTO ordenMedDTO = this.ordenService.addMedicamento(ordenMedicamentoDTO, imagen, idUsuario);
         return ResponseEntity.ok(ordenMedDTO);
     }
@@ -37,6 +39,14 @@ public class OrdenController {
     public ResponseEntity<?> deleteMedicamento(@RequestBody OrdenMedicamentoDTO ordenMedicamentoDTO) {
         this.ordenService.deleteMedicamento(ordenMedicamentoDTO);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("ordenPendiente")
+    public ResponseEntity<OrdenDTO> getOrdenPendiente(@RequestHeader("idUsuario") Long idUsuario) {
+        OrdenDTO orden = this.ordenService.getOrdenPendiente(idUsuario);
+
+        if (orden == null) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
+        return new ResponseEntity<>(orden, HttpStatus.OK);
     }
 
     @Autowired

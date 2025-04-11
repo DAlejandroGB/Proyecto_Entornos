@@ -14,12 +14,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrdenDTO {
+    private Long idOrden;
     private String nombreUsuario;
     private LocalDateTime fechaCreacion;
     private Estado estado;
     private List<ItemMedicamentoDTO> medicamentos;
 
     public OrdenDTO(Orden orden) {
+        this.idOrden = orden.getId();
         this.nombreUsuario = orden.getUsuario().getNombre().concat(" ").concat(orden.getUsuario().getApellido()).toUpperCase();
         this.fechaCreacion = orden.getFechaCreacion();
         this.estado = orden.getEstado();

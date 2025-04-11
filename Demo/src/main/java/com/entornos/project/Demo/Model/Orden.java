@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class Orden {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
+    @Column(name = "orden_id")
     private Long id;
     @Column(name = "usuario_id")
     private Long idUsuario;
@@ -29,7 +29,6 @@ public class Orden {
     private LocalDateTime fechaCreacion;
 
     //Relaciones
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", insertable = false, updatable = false)
     private Usuario usuario;

@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ItemMedicamentoDTO {
 
+    private Long idMedicamento;
     private String nombreMedicamento;
     private Double precioMedicamento;
     private byte[] imagen;
+    private Integer cantidad;
 }

@@ -27,12 +27,10 @@ public class OrdenMedicamento {
     @Column(name = "imagen_orden")
     private byte[] imagen;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "medicamento_id", insertable = false, updatable = false)
     private Medicamento medicamento;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "orden_id", insertable = false, updatable = false)
     private Orden orden;

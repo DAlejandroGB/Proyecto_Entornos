@@ -15,7 +15,7 @@ public interface IOrdenService {
 
     void deleteMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO);
 
-    Orden getOrdenPendiente(Long idUsuario);
+    OrdenDTO getOrdenPendiente(Long idUsuario);
 
     Page<OrdenDTO> getAllOrdenesByUsuario(Long idUsuario, Pageable pageable);
 

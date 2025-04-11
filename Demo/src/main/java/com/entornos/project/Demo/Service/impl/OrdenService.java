@@ -32,7 +32,7 @@ public class OrdenService implements IOrdenService {
     private OrdenMedicamentoRepository ordenMedicamentoRepository;
 
     @Transactional
-    protected Orden createOrden(Long idUsuario) {
+    protected OrdenDTO createOrden(Long idUsuario) {
 
         Optional<Usuario> usuario = usuarioRepository.findById(idUsuario);
         if (usuario.isEmpty()) throw new RuntimeException("No existe el usuario con el id " + idUsuario);
@@ -41,7 +41,8 @@ public class OrdenService implements IOrdenService {
 
         if(ordenPendiente == null) {
             Orden orden = new Orden(idUsuario);
-            return ordenRepository.save(orden);
+            return new OrdenDTO(ordenRepository.save(orden));
+
         }
         return ordenPendiente;
     }
@@ -50,11 +51,11 @@ public class OrdenService implements IOrdenService {
     @Transactional
     public OrdenMedicamentoDTO addMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, MultipartFile imagen, Long idUsuario) throws IOException {
 
-        Orden orden = this.createOrden(idUsuario);
+        OrdenDTO ordenDTO = this.createOrden(idUsuario);
 
-        verificarData(orden.getId(), ordenMedicamentoDTO.getIdMedicamento());
+        verificarData(ordenDTO.getIdOrden(), ordenMedicamentoDTO.getIdMedicamento());
 
-        OrdenMedicamento ordenMedicamentoDB = this.ordenMedicamentoRepository.findMedicamentoByIdOrden(orden.getId(), ordenMedicamentoDTO.getIdMedicamento());
+        OrdenMedicamento ordenMedicamentoDB = this.ordenMedicamentoRepository.findMedicamentoByIdOrden(ordenDTO.getIdOrden(), ordenMedicamentoDTO.getIdMedicamento());
 
         if(ordenMedicamentoDB != null){
             ordenMedicamentoDB.setCantidad(ordenMedicamentoDB.getCantidad() + ordenMedicamentoDTO.getCantidad());
@@ -62,12 +63,14 @@ public class OrdenService implements IOrdenService {
         }
 
         OrdenMedicamento ordenMedicamento = new OrdenMedicamento();
-        ordenMedicamento.setIdOrden(ordenMedicamentoDTO.getIdOrden());
+        ordenMedicamento.setIdOrden(ordenDTO.getIdOrden());
         ordenMedicamento.setIdMedicamento(ordenMedicamentoDTO.getIdMedicamento());
         ordenMedicamento.setCantidad(ordenMedicamentoDTO.getCantidad());
-        ordenMedicamento.setImagen(imagen.getBytes());
+        ordenMedicamento.setImagen(imagen == null ? null : imagen.getBytes());
 
-        return new OrdenMedicamentoDTO(ordenMedicamentoRepository.save(ordenMedicamento));
+        var aux = ordenMedicamentoRepository.findById(ordenMedicamentoRepository.save(ordenMedicamento).getId()).orElseThrow();
+
+        return new OrdenMedicamentoDTO();
     }
 
     private void verificarData(Long idOrden, Long idMedicamento) {
@@ -96,8 +99,12 @@ public class OrdenService implements IOrdenService {
     }
 
     @Override
-    public Orden getOrdenPendiente(Long idUsuario) {
-        return ordenRepository.findByIdUsuario(idUsuario);
+    public OrdenDTO getOrdenPendiente(Long idUsuario) {
+        Orden orden = ordenRepository.findByIdUsuario(idUsuario);
+        OrdenDTO ordenDTO = new OrdenDTO(orden);
+        //Se consultan los medicamentos asociados a esa orden
+        ordenDTO.setMedicamentos(this.ordenMedicamentoRepository.findAllByIdOrden(orden.getId()));
+        return ordenDTO;
     }
 
     @Override
