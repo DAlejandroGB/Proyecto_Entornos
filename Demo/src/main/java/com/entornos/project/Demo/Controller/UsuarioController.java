@@ -1,6 +1,7 @@
 package com.entornos.project.Demo.Controller;
 
 import com.entornos.project.Demo.Model.Usuario;
+import com.entornos.project.Demo.Service.impl.AuthService;
 import com.entornos.project.Demo.Service.impl.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,9 @@ public class UsuarioController {
 
     @Autowired
     UsuarioService usuarioService;
+
+    @Autowired
+    AuthService authService;
 
     @GetMapping("/list")
     public List<Usuario> cargarUsuarios() {
@@ -50,5 +54,24 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(obj, HttpStatus.OK);
+    }
+    @PostMapping({"/login"})
+    public ResponseEntity<String> login(@RequestParam String usuarioNombre, @RequestParam String contrasena) {
+        try {
+            String token = this.authService.login(usuarioNombre, contrasena);
+            return ResponseEntity.ok(token);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
+    }
+
+    @PostMapping({"/verify"})
+    public ResponseEntity<String> verifyToken(@RequestParam String token) {
+        try {
+            this.authService.verificarToken(token);
+            return ResponseEntity.ok("Token es válido");
+        } catch (Exception var3) {
+            return ResponseEntity.status(401).body("Token no válido");
+        }
     }
 }

@@ -1,7 +1,7 @@
 package com.entornos.project.Demo.Service.impl;
 
 import com.entornos.project.Demo.Model.Medicamento;
-import com.entornos.project.Demo.dto.*;
+import com.entornos.project.Demo.DTO.*;
 import com.entornos.project.Demo.Repository.MedicamentoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
