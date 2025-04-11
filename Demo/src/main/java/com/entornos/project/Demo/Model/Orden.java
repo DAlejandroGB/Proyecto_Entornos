@@ -10,8 +10,8 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Table
-@Entity(name = "ordenes")
+@Table(name = "ordenes")
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -37,6 +37,6 @@ public class Orden {
     public Orden(Long idUsuario){
         this.idUsuario = idUsuario;
         this.fechaCreacion = LocalDateTime.now();
-        this.estado = Estado.PENDIENTE;
+        this.estado = Estado.pendiente;
     }
 }

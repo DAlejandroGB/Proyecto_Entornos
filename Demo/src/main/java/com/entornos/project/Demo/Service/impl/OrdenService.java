@@ -13,6 +13,9 @@ import com.entornos.project.Demo.dto.OrdenDTO;
 import com.entornos.project.Demo.dto.OrdenMedicamentoDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,33 +45,68 @@ public class OrdenService implements IOrdenService {
 
     @Override
     @Transactional
-    public OrdenMedicamentoDTO addMedicamento(Long idOrden, Long idMedicamento, Integer cantidad, MultipartFile imagen) throws IOException {
-        Optional<Orden> orden = ordenRepository.findById(idOrden);
-        if (orden.isEmpty()) throw new RuntimeException("No encontró el orden");
+    public OrdenMedicamentoDTO addMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, MultipartFile imagen) throws IOException {
+        verificarData(ordenMedicamentoDTO.getIdOrden(), ordenMedicamentoDTO.getIdMedicamento());
 
-        Orden ordenDB = orden.get();
+        OrdenMedicamento ordenMedicamentoDB = this.ordenMedicamentoRepository.findMedicamentoByIdOrden(ordenMedicamentoDTO.getIdOrden(), ordenMedicamentoDTO.getIdMedicamento());
 
-        Optional<Medicamento> medicamento = this.medicamentoRepository.findById(idMedicamento);
-        if (medicamento.isEmpty()) throw new RuntimeException("No hay medicamento con el id " + idMedicamento);
+        if(ordenMedicamentoDB != null){
+            ordenMedicamentoDB.setCantidad(ordenMedicamentoDB.getCantidad() + ordenMedicamentoDTO.getCantidad());
+            return new OrdenMedicamentoDTO(ordenMedicamentoRepository.save(ordenMedicamentoDB));
+        }
 
         OrdenMedicamento ordenMedicamento = new OrdenMedicamento();
-        ordenMedicamento.setIdOrden(idOrden);
-        ordenMedicamento.setIdMedicamento(idMedicamento);
-        ordenMedicamento.setCantidad(cantidad);
+        ordenMedicamento.setIdOrden(ordenMedicamentoDTO.getIdOrden());
+        ordenMedicamento.setIdMedicamento(ordenMedicamentoDTO.getIdMedicamento());
+        ordenMedicamento.setCantidad(ordenMedicamentoDTO.getCantidad());
         ordenMedicamento.setImagen(imagen.getBytes());
 
         return new OrdenMedicamentoDTO(ordenMedicamentoRepository.save(ordenMedicamento));
     }
 
+    private void verificarData(Long idOrden, Long idMedicamento) {
+        Optional<Orden> orden = ordenRepository.findById(idOrden);
+        if (orden.isEmpty()) throw new RuntimeException("No se encontró el orden");
+
+        Optional<Medicamento> medicamento = this.medicamentoRepository.findById(idMedicamento);
+        if (medicamento.isEmpty()) throw new RuntimeException("No hay medicamento con el id " + idMedicamento);
+    }
+
     @Override
-    public List<OrdenDTO> getAllOrdenes() {
-        List<Orden> ordenes = this.ordenRepository.findAll();
-        return ordenes.stream().map(orden -> {
+    @Transactional
+    public void deleteMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO) {
+        verificarData(ordenMedicamentoDTO.getIdOrden(), ordenMedicamentoDTO.getIdMedicamento());
+
+        OrdenMedicamento ordenMedicamentoDB = this.ordenMedicamentoRepository.findMedicamentoByIdOrden(ordenMedicamentoDTO.getIdOrden(), ordenMedicamentoDTO.getIdMedicamento());
+
+        if(ordenMedicamentoDB != null){
+            if(ordenMedicamentoDB.getCantidad() - ordenMedicamentoDTO.getCantidad() <= 0){
+                this.ordenMedicamentoRepository.delete(ordenMedicamentoDB);
+            }else{
+                ordenMedicamentoDB.setCantidad(ordenMedicamentoDB.getCantidad() - ordenMedicamentoDTO.getCantidad());
+                ordenMedicamentoRepository.save(ordenMedicamentoDB);
+            }
+        }
+    }
+
+    @Override
+    public OrdenDTO getOrdenPendiente(Long idUsuario) {
+        Orden orden = ordenRepository.findByIdUsuario(idUsuario);
+        if(orden == null) return null;
+        return new OrdenDTO(orden);
+    }
+
+    @Override
+    public Page<OrdenDTO> getAllOrdenesByUsuario(Long idUsuario, Pageable pageable) {
+        Page<Orden> ordenes = this.ordenRepository.findAllByIdUsuario(idUsuario, pageable);
+        List<OrdenDTO> ordenDTOS = ordenes.getContent().stream().map(orden -> {
             OrdenDTO ordenDTO = new OrdenDTO(orden);
             //Se consultan los medicamentos asociados a esa orden
             ordenDTO.setMedicamentos(this.ordenMedicamentoRepository.findAllByIdOrden(orden.getId()));
             return ordenDTO;
         }).toList();
+
+        return new PageImpl<>(ordenDTOS, pageable, ordenes.getTotalElements());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.entornos.project.Demo.Repository;
 
+import com.entornos.project.Demo.Model.Medicamento;
 import com.entornos.project.Demo.Model.OrdenMedicamento;
 import com.entornos.project.Demo.dto.ItemMedicamentoDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +18,7 @@ public interface OrdenMedicamentoRepository extends JpaRepository<OrdenMedicamen
     List<OrdenMedicamento> findAllByIdMedicamento(Long idMedicamento);
 
     Long id(Long id);
+
+    @Query("SELECT om FROM OrdenMedicamento om WHERE om.idOrden =:idOrden and om.idMedicamento =:idMedicamento")
+    OrdenMedicamento findMedicamentoByIdOrden(Long idOrden, Long idMedicamento);
 }

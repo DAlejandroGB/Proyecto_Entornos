@@ -11,10 +11,12 @@ import lombok.NoArgsConstructor;
 public class OrdenMedicamentoDTO {
     private Long idOrden;
     private String nombreMedicamento;
+    private Long idMedicamento;
     private Integer cantidad;
 
     public OrdenMedicamentoDTO(OrdenMedicamento ordenMedicamento) {
         this.idOrden = ordenMedicamento.getIdOrden();
+        this.idMedicamento = ordenMedicamento.getIdMedicamento();
         this.nombreMedicamento = ordenMedicamento.getMedicamento().getNombre();
         this.cantidad = ordenMedicamento.getCantidad();
     }
