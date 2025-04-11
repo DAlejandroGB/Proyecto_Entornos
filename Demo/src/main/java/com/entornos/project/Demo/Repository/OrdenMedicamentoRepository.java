@@ -1,6 +1,5 @@
 package com.entornos.project.Demo.Repository;
 
-import com.entornos.project.Demo.Model.Medicamento;
 import com.entornos.project.Demo.Model.OrdenMedicamento;
 import com.entornos.project.Demo.DTO.ItemMedicamentoDTO;
 import org.springframework.data.jpa.repository.JpaRepository;

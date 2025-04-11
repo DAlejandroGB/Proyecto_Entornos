@@ -31,24 +31,30 @@ public class OrdenService implements IOrdenService {
     private MedicamentoRepository medicamentoRepository;
     private OrdenMedicamentoRepository ordenMedicamentoRepository;
 
-    @Override
     @Transactional
-    public OrdenDTO createOrden(Long idUsuario) {
+    protected Orden createOrden(Long idUsuario) {
 
         Optional<Usuario> usuario = usuarioRepository.findById(idUsuario);
         if (usuario.isEmpty()) throw new RuntimeException("No existe el usuario con el id " + idUsuario);
 
-        Orden orden = new Orden(idUsuario);
-        Orden ordenDB = ordenRepository.save(orden);
-        return new OrdenDTO(ordenDB);
+        var ordenPendiente = this.getOrdenPendiente(idUsuario);
+
+        if(ordenPendiente == null) {
+            Orden orden = new Orden(idUsuario);
+            return ordenRepository.save(orden);
+        }
+        return ordenPendiente;
     }
 
     @Override
     @Transactional
-    public OrdenMedicamentoDTO addMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, MultipartFile imagen) throws IOException {
-        verificarData(ordenMedicamentoDTO.getIdOrden(), ordenMedicamentoDTO.getIdMedicamento());
+    public OrdenMedicamentoDTO addMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, MultipartFile imagen, Long idUsuario) throws IOException {
 
-        OrdenMedicamento ordenMedicamentoDB = this.ordenMedicamentoRepository.findMedicamentoByIdOrden(ordenMedicamentoDTO.getIdOrden(), ordenMedicamentoDTO.getIdMedicamento());
+        Orden orden = this.createOrden(idUsuario);
+
+        verificarData(orden.getId(), ordenMedicamentoDTO.getIdMedicamento());
+
+        OrdenMedicamento ordenMedicamentoDB = this.ordenMedicamentoRepository.findMedicamentoByIdOrden(orden.getId(), ordenMedicamentoDTO.getIdMedicamento());
 
         if(ordenMedicamentoDB != null){
             ordenMedicamentoDB.setCantidad(ordenMedicamentoDB.getCantidad() + ordenMedicamentoDTO.getCantidad());
@@ -90,10 +96,8 @@ public class OrdenService implements IOrdenService {
     }
 
     @Override
-    public OrdenDTO getOrdenPendiente(Long idUsuario) {
-        Orden orden = ordenRepository.findByIdUsuario(idUsuario);
-        if(orden == null) return null;
-        return new OrdenDTO(orden);
+    public Orden getOrdenPendiente(Long idUsuario) {
+        return ordenRepository.findByIdUsuario(idUsuario);
     }
 
     @Override

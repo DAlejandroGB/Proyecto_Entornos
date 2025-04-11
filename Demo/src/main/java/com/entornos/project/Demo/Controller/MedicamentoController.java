@@ -35,4 +35,9 @@ public class MedicamentoController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{id}")
+    public MedicamentoDTO obtenerPorId(@PathVariable Long id) {
+        return service.obtenerPorId(id);
+    }
+
 }
