@@ -1,15 +1,17 @@
 package com.entornos.project.Demo.Service.interfaces;
 
+import com.entornos.project.Demo.DTO.CreateCredencialesDTO;
+import com.entornos.project.Demo.DTO.CredencialesDTO;
 import com.entornos.project.Demo.Model.Credencial;
 
 import java.util.List;
 
 public interface ICredencialService {
-    List<Credencial> listarCredenciales();
-    Credencial getCredencial(Long id);
-    Credencial buscarCredencial(Long idUsuario);
+    List<CredencialesDTO> listarCredenciales();
+    CredencialesDTO getCredencialByNombreUsuario(String nombreUsuario);
     //Se usa tanto para crear como para actualizar
-    Credencial saveCredencial(Credencial credencial);
-    void eliminarCredencial(Credencial credencial);
+    CredencialesDTO saveCredenciales(CreateCredencialesDTO createCredencialesDTO);
+    CredencialesDTO eliminarCredencial(Long id);
 
+    CredencialesDTO updateCredenciales(CreateCredencialesDTO credencialesDTO);
 }

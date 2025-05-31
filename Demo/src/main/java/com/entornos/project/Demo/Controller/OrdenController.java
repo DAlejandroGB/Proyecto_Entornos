@@ -21,7 +21,7 @@ public class OrdenController {
 
     private IOrdenService ordenService;
 
-    @GetMapping("{idUsuario}")
+    @GetMapping("/byIdUsuario/{idUsuario}")
     public ResponseEntity<Page<OrdenDTO>> getOrdenes(@PathVariable Long idUsuario, Pageable pageable) {
         Page<OrdenDTO> ordenes = this.ordenService.getAllOrdenesByUsuario(idUsuario, pageable);
 
@@ -29,20 +29,20 @@ public class OrdenController {
         return new ResponseEntity<>(ordenes, HttpStatus.OK);
     }
 
-    @PostMapping("addMedicamento")
+    @PostMapping("/addMedicamento")
     public ResponseEntity<OrdenMedicamentoDTO> addMedicamento(@RequestBody OrdenMedicamentoDTO ordenMedicamentoDTO, @RequestPart(name = "imagen", required = false) MultipartFile imagen,@RequestHeader(name = "idUsuario") Long idUsuario) throws IOException {
         OrdenMedicamentoDTO ordenMedDTO = this.ordenService.addMedicamento(ordenMedicamentoDTO, imagen, idUsuario);
         return ResponseEntity.ok(ordenMedDTO);
     }
 
-    @DeleteMapping("deleteMedicamento")
+    @DeleteMapping("/deleteMedicamento")
     public ResponseEntity<?> deleteMedicamento(@RequestBody OrdenMedicamentoDTO ordenMedicamentoDTO) {
         this.ordenService.deleteMedicamento(ordenMedicamentoDTO);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("ordenPendiente")
-    public ResponseEntity<OrdenDTO> getOrdenPendiente(@RequestHeader("idUsuario") Long idUsuario) {
+    @GetMapping("/ordenPendiente/{idUsuario}")
+    public ResponseEntity<OrdenDTO> getOrdenPendiente(@PathVariable("idUsuario") Long idUsuario) {
         OrdenDTO orden = this.ordenService.getOrdenPendiente(idUsuario);
 
         if (orden == null) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }

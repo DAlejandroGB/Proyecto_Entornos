@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)  // Deshabilitamos CSRF (útil para JWT)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/usuarios/login", "/usuarios/","/credencial/").permitAll()  // Rutas públicas
+                        .requestMatchers("/usuarios/login", "/usuarios","/credencial").permitAll()  // Rutas públicas
                         .requestMatchers(HttpMethod.DELETE, "/usuarios/*").permitAll()
                         .anyRequest().authenticated()  // Rutas protegidas
                 )

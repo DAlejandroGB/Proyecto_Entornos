@@ -1,58 +1,44 @@
 
 package com.entornos.project.Demo.Model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 
 @Entity
 @Table(name = "credenciales")
 @Data
-public class Credencial {
-    public static final String NAME = "credenciales";
+@NoArgsConstructor
+@AllArgsConstructor
+public class Credencial implements Serializable {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.IDENTITY
-    )
-    @Column(
-            name = "credencial_id"
-    )
-    private Long credencialId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(
-            name = "usuario_id",
-            nullable = false
-    )
-    private Usuario usuario;
+    @Column(name = "id_usuario")
+    private Long idUsuario;
 
-    @Column(
-            name = "usuario",
-            nullable = false,
-            unique = true
-    )
-    private String usuarioNombre;
+    @Column(name = "usuario")
+    private String nombreUsuario;
 
-    @Column(
-            name = "contrasena",
-            nullable = false
-    )
+    @Column(name = "contrasena")
     private String contrasena;
 
-    @Column(
-            name = "fecha_creacion",
-            nullable = false,
-            updatable = false
-    )
-    private LocalDate fechaCreacion = LocalDate.from(LocalDateTime.now());;
+    @Column(name = "fecha_creacion")
+    private LocalDate fechaCreacion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario", insertable = false, updatable = false)
+    private Usuario usuario;
+
+    public Credencial(Long idUsuario, String nombreUsuario, String password) {
+        this.idUsuario = idUsuario;
+        this.nombreUsuario = nombreUsuario;
+        this.contrasena = password;
+        this.fechaCreacion = LocalDate.now();
+    }
 }

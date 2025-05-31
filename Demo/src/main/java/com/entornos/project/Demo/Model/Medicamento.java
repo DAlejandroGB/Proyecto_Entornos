@@ -1,10 +1,11 @@
 package com.entornos.project.Demo.Model;
 
+import com.entornos.project.Demo.DTO.CrearMedicamentoDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "Medicamentos")
+@Table(name = "medicamentos")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,23 +14,17 @@ public class Medicamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long medicamentoId;
-
-    @Column(nullable = false)
+    private Long id;
     private String nombre;
-
-    @Column(nullable = false)
     private Double precio;
+    private String imagen;
+    @Column(name = "venta_libre")
+    private Boolean ventaLibre;
 
-    @Lob
-    private byte[] imagenMed;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Tipo tipo;
-
-    public enum Tipo {
-        recetado, ventalibre
+    public Medicamento(CrearMedicamentoDTO crearMedicamentoDTO) {
+        this.nombre = crearMedicamentoDTO.getNombre();
+        this.precio = crearMedicamentoDTO.getPrecio();
+        this.imagen = crearMedicamentoDTO.getImagenMed();
+        this.ventaLibre = crearMedicamentoDTO.getVentaLibre();
     }
-
 }

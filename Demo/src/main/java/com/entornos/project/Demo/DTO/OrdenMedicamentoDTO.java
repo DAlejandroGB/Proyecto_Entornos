@@ -13,11 +13,13 @@ public class OrdenMedicamentoDTO {
     private String nombreMedicamento;
     private Long idMedicamento;
     private Integer cantidad;
+    private String imagen;
 
     public OrdenMedicamentoDTO(OrdenMedicamento ordenMedicamento) {
         this.idOrden = ordenMedicamento.getIdOrden();
         this.idMedicamento = ordenMedicamento.getIdMedicamento();
         this.nombreMedicamento = ordenMedicamento.getMedicamento().getNombre();
         this.cantidad = ordenMedicamento.getCantidad();
+        this.imagen = ordenMedicamento.getImagen();
     }
 }

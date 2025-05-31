@@ -1,13 +1,14 @@
 package com.entornos.project.Demo.DTO;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class CrearMedicamentoDTO {
-
+public class ActualizarMedicamentoDTO {
+    private Long id;
     private String nombre;
     private Double precio;
     private String imagenMed;

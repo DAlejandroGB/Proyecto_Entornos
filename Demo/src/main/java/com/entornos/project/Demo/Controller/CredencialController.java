@@ -1,7 +1,9 @@
 package com.entornos.project.Demo.Controller;
 
+import com.entornos.project.Demo.DTO.CreateCredencialesDTO;
+import com.entornos.project.Demo.DTO.CredencialesDTO;
 import com.entornos.project.Demo.Model.Credencial;
-import com.entornos.project.Demo.Service.impl.CredencialService;
+import com.entornos.project.Demo.Service.interfaces.ICredencialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,58 +12,46 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/credencial")
+@RequestMapping("credencial")
 public class CredencialController {
 
     @Autowired
-    private CredencialService credencialService;
+    private ICredencialService credencialService;
 
-    @PostMapping("/")
-    public ResponseEntity<Credencial> credencial(@RequestBody Credencial credencial) {
+    @PostMapping()
+    public ResponseEntity<CredencialesDTO> guardarCredenciales(@RequestBody CreateCredencialesDTO createCredencialesDTO) {
         try {
-            Credencial c= credencialService.saveCredencial(credencial);
-            System.out.println("Credencial credencial: "+ c);
-            return new ResponseEntity<>(c, HttpStatus.CREATED);
+            CredencialesDTO credenciales = credencialService.saveCredenciales(createCredencialesDTO);
+            return new ResponseEntity<>(credenciales, HttpStatus.CREATED);
         }catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/list")
-    public List<Credencial> listCredencial() {
-        return credencialService.listarCredenciales();
+    public ResponseEntity<List<CredencialesDTO>> listarCredenciales() {
+        List<CredencialesDTO> credenciales = this.credencialService.listarCredenciales();
+        if(credenciales == null || credenciales.isEmpty()) return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(credenciales, HttpStatus.OK);
     }
 
-    @GetMapping("/list/{id}")
-    public Credencial searchCredencial(@PathVariable Long id) {
-        return credencialService.getCredencial(id);
+    @GetMapping("/byNombreUsuario/{nombreUsuario}")
+    public ResponseEntity<CredencialesDTO> searchCredencial(@PathVariable String nombreUsuario) {
+        CredencialesDTO credencial = this.credencialService.getCredencialByNombreUsuario(nombreUsuario);
+        if(credencial == null) return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(credencial, HttpStatus.OK);
     }
 
-    @PutMapping("/")
-    public ResponseEntity<Credencial> updateCredencial(@RequestBody Credencial credencial) {
-        Credencial c = credencialService.getCredencial(credencial.getCredencialId());
-        if (c!=null) {
-            c.setUsuario(credencial.getUsuario());
-            c.setContrasena(credencial.getContrasena());
-            c.setUsuarioNombre(credencial.getUsuarioNombre());
-            credencialService.saveCredencial(c);
-            return new ResponseEntity<>(c, HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @PutMapping()
+    public ResponseEntity<CredencialesDTO> updateCredencial(@RequestBody CreateCredencialesDTO credencialesDTO) {
+        CredencialesDTO credenciales = this.credencialService.updateCredenciales(credencialesDTO);
+        return new ResponseEntity<>(credenciales, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Credencial> deleteCredencial(@PathVariable Long id) {
-        Credencial c = credencialService.getCredencial(id);
-        if (c!=null) {
-            credencialService.eliminarCredencial(c);
-            return new ResponseEntity<>(c, HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<CredencialesDTO> deleteCredencial(@PathVariable Long id) {
+        CredencialesDTO credencialesDTO = this.credencialService.eliminarCredencial(id);
+        return new ResponseEntity<>(credencialesDTO, HttpStatus.OK);
     }
 
 }

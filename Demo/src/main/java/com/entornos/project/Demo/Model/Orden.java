@@ -1,14 +1,13 @@
 package com.entornos.project.Demo.Model;
 
-import com.entornos.project.Demo.Enum.Estado;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import javax.print.attribute.standard.MediaSize;
+import java.time.LocalDate;
 
 @Table(name = "ordenes")
 @Entity
@@ -19,23 +18,38 @@ import java.time.LocalDateTime;
 public class Orden {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "orden_id")
+    @Column(name = "id")
     private Long id;
-    @Column(name = "usuario_id")
+
+    @Column(name = "id_usuario")
     private Long idUsuario;
-    @Enumerated(EnumType.STRING)
-    private Estado estado;
+
+    @Column(name = "id_estado")
+    private Long idEstado;
+
     @Column(name = "fecha_creacion")
-    private LocalDateTime fechaCreacion;
+    private LocalDate fechaCreacion;
+
+    @Column(name = "fecha_completado")
+    private LocalDate fechaCompletada;
+
+    @Column(name = "fecha_rechazo")
+    private LocalDate fechaRechazo;
+
+    @Column(name = "fecha_modificacion")
+    private LocalDate fechaModificacion;
 
     //Relaciones
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", insertable = false, updatable = false)
+    @JoinColumn(name = "id_usuario", insertable = false, updatable = false)
     private Usuario usuario;
 
-    public Orden(Long idUsuario){
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_estado", insertable = false, updatable = false)
+    private Estado estado;
+
+    public Orden(Long idUsuario) {
         this.idUsuario = idUsuario;
-        this.fechaCreacion = LocalDateTime.now();
-        this.estado = Estado.pendiente;
+        this.fechaCreacion = LocalDate.now();
     }
 }

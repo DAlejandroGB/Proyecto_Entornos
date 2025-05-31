@@ -1,8 +1,12 @@
 package com.entornos.project.Demo.Controller;
 
+import com.entornos.project.Demo.DTO.ActualizarUsuarioDTO;
+import com.entornos.project.Demo.DTO.CreateUsuarioDTO;
+import com.entornos.project.Demo.DTO.UsuarioDTO;
 import com.entornos.project.Demo.Model.Usuario;
 import com.entornos.project.Demo.Service.impl.AuthService;
 import com.entornos.project.Demo.Service.impl.UsuarioService;
+import com.entornos.project.Demo.Service.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,46 +18,38 @@ import java.util.List;
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    @Autowired
-    UsuarioService usuarioService;
-
-    @Autowired
+    IUsuarioService usuarioService;
     AuthService authService;
 
     @GetMapping("/list")
-    public List<Usuario> cargarUsuarios() {
-        return usuarioService.getUsuarios();
+    public ResponseEntity<List<UsuarioDTO>> cargarUsuarios() {
+        List<UsuarioDTO> usuarioDTOS = this.usuarioService.getUsuarios();
+        if (usuarioDTOS.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(usuarioDTOS, HttpStatus.OK);
     }
 
     @GetMapping("/list/{id}")
-    public Usuario buscarPorId(@PathVariable Long id) {
-        return usuarioService.buscarUsuario(id);
+    public ResponseEntity<UsuarioDTO> buscarPorId(@PathVariable Long id) {
+        UsuarioDTO usuarioDTO = usuarioService.buscarUsuario(id);
+        if (usuarioDTO == null) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(usuarioDTO, HttpStatus.OK);
     }
 
     @PostMapping("/")
-    public ResponseEntity<Usuario> agregarUsuario(@RequestBody Usuario usuario) {
-        Usuario obj = usuarioService.nuevoUsuario(usuario);
-        return new ResponseEntity<>(obj, HttpStatus.CREATED);
+    public ResponseEntity<UsuarioDTO> agregarUsuario(@RequestBody CreateUsuarioDTO createUsuarioDTO) {
+        UsuarioDTO usuarioDTO = usuarioService.nuevoUsuario(createUsuarioDTO);
+        return new ResponseEntity<>(usuarioDTO, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
-        Usuario obj = usuarioService.actualizarUsuario(id, usuario);
-        if (obj == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @PutMapping("/")
+    public ResponseEntity<UsuarioDTO> actualizarUsuario(@RequestBody ActualizarUsuarioDTO actualizarUsuarioDTO) {
+        UsuarioDTO obj = usuarioService.actualizarUsuario(actualizarUsuarioDTO);
         return new ResponseEntity<>(obj, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Usuario> eliminarUsuario(@PathVariable Long id) {
-        Usuario obj = usuarioService.buscarUsuario(id);
-        if (obj != null) {
-            usuarioService.borrarUsuario(id);
-        }else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(obj, HttpStatus.OK);
+    public ResponseEntity<UsuarioDTO> eliminarUsuario(@PathVariable Long id) {
+        return new ResponseEntity<>(this.usuarioService.borrarUsuario(id), HttpStatus.OK);
     }
     @PostMapping({"/login"})
     public ResponseEntity<String> login(@RequestParam String usuarioNombre, @RequestParam String contrasena) {
@@ -73,5 +69,15 @@ public class UsuarioController {
         } catch (Exception var3) {
             return ResponseEntity.status(401).body("Token no válido");
         }
+    }
+
+    @Autowired
+    public void setAuthService(AuthService authService) {
+        this.authService = authService;
+    }
+
+    @Autowired
+    public void setUsuarioService(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
     }
 }

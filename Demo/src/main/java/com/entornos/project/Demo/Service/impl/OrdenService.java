@@ -1,13 +1,7 @@
 package com.entornos.project.Demo.Service.impl;
 
-import com.entornos.project.Demo.Model.Medicamento;
-import com.entornos.project.Demo.Model.Orden;
-import com.entornos.project.Demo.Model.OrdenMedicamento;
-import com.entornos.project.Demo.Model.Usuario;
-import com.entornos.project.Demo.Repository.MedicamentoRepository;
-import com.entornos.project.Demo.Repository.OrdenMedicamentoRepository;
-import com.entornos.project.Demo.Repository.OrdenRepository;
-import com.entornos.project.Demo.Repository.UsuarioRepository;
+import com.entornos.project.Demo.Model.*;
+import com.entornos.project.Demo.Repository.*;
 import com.entornos.project.Demo.Service.interfaces.IOrdenService;
 import com.entornos.project.Demo.DTO.OrdenDTO;
 import com.entornos.project.Demo.DTO.OrdenMedicamentoDTO;
@@ -17,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,6 +23,7 @@ public class OrdenService implements IOrdenService {
     private UsuarioRepository usuarioRepository;
     private MedicamentoRepository medicamentoRepository;
     private OrdenMedicamentoRepository ordenMedicamentoRepository;
+    private IEstadoRepository estadoRepository;
 
     @Transactional
     protected OrdenDTO createOrden(Long idUsuario) {
@@ -41,6 +35,9 @@ public class OrdenService implements IOrdenService {
 
         if(ordenPendiente == null) {
             Orden orden = new Orden(idUsuario);
+            //Traemos el estado pendiente por defecto
+            Estado estadoPendiente = this.estadoRepository.findByNombre("PENDIENNTE");
+            orden.setEstado(estadoPendiente);
             return new OrdenDTO(ordenRepository.save(orden));
 
         }
@@ -49,11 +46,10 @@ public class OrdenService implements IOrdenService {
 
     @Override
     @Transactional
-    public OrdenMedicamentoDTO addMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, MultipartFile imagen, Long idUsuario) throws IOException {
+    public OrdenMedicamentoDTO addMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, Long idUsuario) throws IOException {
 
         OrdenDTO ordenDTO = this.createOrden(idUsuario);
-
-        verificarData(ordenDTO.getIdOrden(), ordenMedicamentoDTO.getIdMedicamento());
+        Medicamento medicamento = this.verificarMedicamento(ordenMedicamentoDTO.getIdMedicamento());
 
         OrdenMedicamento ordenMedicamentoDB = this.ordenMedicamentoRepository.findMedicamentoByIdOrden(ordenDTO.getIdOrden(), ordenMedicamentoDTO.getIdMedicamento());
 
@@ -62,29 +58,41 @@ public class OrdenService implements IOrdenService {
             return new OrdenMedicamentoDTO(ordenMedicamentoRepository.save(ordenMedicamentoDB));
         }
 
-        OrdenMedicamento ordenMedicamento = new OrdenMedicamento();
-        ordenMedicamento.setIdOrden(ordenDTO.getIdOrden());
-        ordenMedicamento.setIdMedicamento(ordenMedicamentoDTO.getIdMedicamento());
-        ordenMedicamento.setCantidad(ordenMedicamentoDTO.getCantidad());
-        ordenMedicamento.setImagen(imagen == null ? null : imagen.getBytes());
-
-        var aux = ordenMedicamentoRepository.findById(ordenMedicamentoRepository.save(ordenMedicamento).getId()).orElseThrow();
+        OrdenMedicamento ordenMedicamento = getOrdenMedicamento(ordenMedicamentoDTO, ordenDTO, medicamento);
+        ordenMedicamentoRepository.findById(ordenMedicamentoRepository.save(ordenMedicamento).getId()).orElseThrow();
 
         return new OrdenMedicamentoDTO();
     }
 
-    private void verificarData(Long idOrden, Long idMedicamento) {
+    private static OrdenMedicamento getOrdenMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, OrdenDTO ordenDTO, Medicamento medicamento) {
+        OrdenMedicamento ordenMedicamento = new OrdenMedicamento();
+        ordenMedicamento.setIdOrden(ordenDTO.getIdOrden());
+        ordenMedicamento.setIdMedicamento(ordenMedicamentoDTO.getIdMedicamento());
+        ordenMedicamento.setCantidad(ordenMedicamentoDTO.getCantidad());
+        if(!medicamento.getVentaLibre()){
+            if(ordenMedicamentoDTO.getImagen() == null) throw new RuntimeException("Su medicamento no es de venta libre, por favor cargue la orden médica.");
+            ordenMedicamento.setImagen(ordenMedicamentoDTO.getImagen());
+        }
+        return ordenMedicamento;
+    }
+
+    private Orden verificarOrden(Long idOrden) {
         Optional<Orden> orden = ordenRepository.findById(idOrden);
         if (orden.isEmpty()) throw new RuntimeException("No se encontró el orden");
+        return orden.get();
+    }
 
+    private Medicamento verificarMedicamento(Long idMedicamento) {
         Optional<Medicamento> medicamento = this.medicamentoRepository.findById(idMedicamento);
         if (medicamento.isEmpty()) throw new RuntimeException("No hay medicamento con el id " + idMedicamento);
+        return medicamento.get();
     }
 
     @Override
     @Transactional
     public void deleteMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO) {
-        verificarData(ordenMedicamentoDTO.getIdOrden(), ordenMedicamentoDTO.getIdMedicamento());
+        verificarOrden(ordenMedicamentoDTO.getIdOrden());
+        verificarMedicamento(ordenMedicamentoDTO.getIdMedicamento());
 
         OrdenMedicamento ordenMedicamentoDB = this.ordenMedicamentoRepository.findMedicamentoByIdOrden(ordenMedicamentoDTO.getIdOrden(), ordenMedicamentoDTO.getIdMedicamento());
 
@@ -100,7 +108,10 @@ public class OrdenService implements IOrdenService {
 
     @Override
     public OrdenDTO getOrdenPendiente(Long idUsuario) {
-        Orden orden = ordenRepository.findByIdUsuario(idUsuario);
+        //Traemos el estado pendiente
+        Estado estadoPendiente = this.estadoRepository.findByNombre("PENDENTE");
+        List<Orden> ordenes = ordenRepository.findByIdUsuarioAndIdEstado(idUsuario, estadoPendiente.getId());
+        Orden orden = ordenes.getFirst();
         OrdenDTO ordenDTO = new OrdenDTO(orden);
         //Se consultan los medicamentos asociados a esa orden
         ordenDTO.setMedicamentos(this.ordenMedicamentoRepository.findAllByIdOrden(orden.getId()));
@@ -150,5 +161,10 @@ public class OrdenService implements IOrdenService {
     @Autowired
     public void setOrdenMedicamentoRepository(OrdenMedicamentoRepository ordenMedicamentoRepository) {
         this.ordenMedicamentoRepository = ordenMedicamentoRepository;
+    }
+
+    @Autowired
+    public void setEstadoRepository(IEstadoRepository estadoRepository) {
+        this.estadoRepository = estadoRepository;
     }
 }

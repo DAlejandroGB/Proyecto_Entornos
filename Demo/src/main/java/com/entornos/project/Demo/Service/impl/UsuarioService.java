@@ -1,5 +1,8 @@
 package com.entornos.project.Demo.Service.impl;
 
+import com.entornos.project.Demo.DTO.ActualizarUsuarioDTO;
+import com.entornos.project.Demo.DTO.CreateUsuarioDTO;
+import com.entornos.project.Demo.DTO.UsuarioDTO;
 import com.entornos.project.Demo.Model.Usuario;
 import com.entornos.project.Demo.Repository.UsuarioRepository;
 import com.entornos.project.Demo.Service.interfaces.IUsuarioService;
@@ -13,44 +16,50 @@ import java.util.List;
 @Transactional
 public class UsuarioService implements IUsuarioService {
 
-
-    @Autowired
     private UsuarioRepository usuarioRepository;
 
     @Override
-    public List<Usuario> getUsuarios() {
-        return usuarioRepository.findAll();
+    public List<UsuarioDTO> getUsuarios() {
+        return this.usuarioRepository.findAll().stream().map(UsuarioDTO::new).toList();
     }
 
     @Override
-    public Usuario buscarUsuario(Long id) {
-        return usuarioRepository.findById(id).orElse(null);
+    public UsuarioDTO buscarUsuario(Long id) {
+        Usuario user = usuarioRepository.findById(id).orElse(null);
+        if (user == null) return null;
+        return new UsuarioDTO(user);
     }
 
     @Override
-    public Usuario nuevoUsuario(Usuario usuario) {
-        return usuarioRepository.save(usuario);
+    public UsuarioDTO nuevoUsuario(CreateUsuarioDTO createUsuarioDTO) {
+        Usuario usuario = new Usuario(createUsuarioDTO);
+        return new UsuarioDTO(usuarioRepository.save(usuario));
     }
 
     @Override
-    public int borrarUsuario(Long id) {
-        usuarioRepository.deleteById(id);
-        return 1;
+    public UsuarioDTO borrarUsuario(Long id) {
+        Usuario usuario = usuarioRepository.findById(id).orElse(null);
+        if (usuario == null) throw new RuntimeException("Usuario no encontrado");
+        usuarioRepository.delete(usuario);
+        return new UsuarioDTO(usuario);
     }
 
     @Override
-    public Usuario actualizarUsuario(Long id, Usuario usuarioAct) {
-        return usuarioRepository.findById(id).map(usuario -> {
-            if (usuarioAct.getNombre() != null) usuario.setNombre(usuarioAct.getNombre());
-            if (usuarioAct.getApellido() != null) usuario.setApellido(usuarioAct.getApellido());
-            if (usuarioAct.getEmail() != null) usuario.setEmail(usuarioAct.getEmail());
-            if (usuarioAct.getTelefono() != null) usuario.setTelefono(usuarioAct.getTelefono());
-            if (usuarioAct.getDireccion() != null) usuario.setDireccion(usuarioAct.getDireccion());
-            if (usuarioAct.getRol() != null) usuario.setRol(usuarioAct.getRol());
-            return usuarioRepository.save(usuario);
-        }).orElse(null);
+    public UsuarioDTO actualizarUsuario(ActualizarUsuarioDTO usuarioDTO) {
+        Usuario usuario = usuarioRepository.findById(usuarioDTO.getId()).orElse(null);
+        if (usuario == null) throw new RuntimeException("Usuario no encontrado");
+
+        usuario.setNombres(usuarioDTO.getNombres());
+        usuario.setApellidos(usuarioDTO.getApellidos());
+        usuario.setEmail(usuarioDTO.getEmail());
+        usuario.setTelefono(usuarioDTO.getTelefono());
+        usuario.setIdRol(usuarioDTO.getIdRol());
+
+        return new UsuarioDTO(usuarioRepository.save(usuario));
     }
 
-
-
+    @Autowired
+    public void setUsuarioRepository(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
 }
