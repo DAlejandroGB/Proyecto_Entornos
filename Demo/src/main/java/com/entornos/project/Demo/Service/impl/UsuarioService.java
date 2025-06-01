@@ -53,7 +53,6 @@ public class UsuarioService implements IUsuarioService {
         usuario.setApellidos(usuarioDTO.getApellidos());
         usuario.setEmail(usuarioDTO.getEmail());
         usuario.setTelefono(usuarioDTO.getTelefono());
-        usuario.setIdRol(usuarioDTO.getIdRol());
 
         return new UsuarioDTO(usuarioRepository.save(usuario));
     }

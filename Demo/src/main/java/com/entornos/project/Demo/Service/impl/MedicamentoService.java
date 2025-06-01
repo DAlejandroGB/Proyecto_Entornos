@@ -29,13 +29,13 @@ public class MedicamentoService implements IMedicamentoService {
     }
 
     @Override
-    public MedicamentoDTO actualizar(ActualizarMedicamentoDTO actualizarMedicamentoDTO) {
-        Medicamento medicamento = repository.findById(actualizarMedicamentoDTO.getId()).orElseThrow(() -> new RuntimeException("Medicamento no encontrado"));
+    public MedicamentoDTO actualizar(MedicamentoDTO medicamentoDTO) {
+        Medicamento medicamento = repository.findById(medicamentoDTO.getId()).orElseThrow(() -> new RuntimeException("Medicamento no encontrado"));
 
-        medicamento.setNombre(actualizarMedicamentoDTO.getNombre());
-        medicamento.setPrecio(actualizarMedicamentoDTO.getPrecio());
-        medicamento.setImagen(actualizarMedicamentoDTO.getImagenMed());
-        medicamento.setVentaLibre(actualizarMedicamentoDTO.getVentaLibre());
+        medicamento.setNombre(medicamentoDTO.getNombre());
+        medicamento.setPrecio(medicamentoDTO.getPrecio());
+        medicamento.setImagen(medicamentoDTO.getImagenMed());
+        medicamento.setVentaLibre(medicamentoDTO.getVentaLibre());
 
         return toDTO(repository.save(medicamento));
     }
@@ -54,6 +54,7 @@ public class MedicamentoService implements IMedicamentoService {
                 .nombre(m.getNombre())
                 .precio(m.getPrecio())
                 .ventaLibre(m.getVentaLibre())
+                .imagenMed(m.getImagen())
                 .build();
     }
 

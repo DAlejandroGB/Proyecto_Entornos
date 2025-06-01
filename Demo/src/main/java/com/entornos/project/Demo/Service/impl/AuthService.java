@@ -28,7 +28,7 @@ public class AuthService implements IAuthService {
     }
 
     public String login(String usuarioNombre, String contrasena) {
-        Optional<Credencial> credencialOpt = credencialRepository.findByUsuarioNombre(usuarioNombre);
+        Optional<Credencial> credencialOpt = Optional.of(credencialRepository.findByNombreUsuario(usuarioNombre));
 
         if (credencialOpt.isEmpty()) {
             throw new RuntimeException("Credenciales inválidas");
@@ -49,7 +49,7 @@ public class AuthService implements IAuthService {
         Date expire = Date.from(now.plus(1, ChronoUnit.DAYS));
 
         return JWT.create()
-                .withSubject(credencial.getUsuarioNombre())
+                .withSubject(credencial.getNombreUsuario())
                 .withIssuer("auth0")
                 .withIssuedAt(Date.from(now))
                 .withExpiresAt(expire)

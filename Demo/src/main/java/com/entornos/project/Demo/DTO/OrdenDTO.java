@@ -1,6 +1,7 @@
 package com.entornos.project.Demo.DTO;
 
 import com.entornos.project.Demo.Model.Orden;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,10 +14,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrdenDTO {
+    @Schema(name = "idOrden", description = "Identificador del la orden")
     private Long idOrden;
+    @Schema(name = "nombreUsuario", description = "Nombre del usuario el cual realizo la orden")
     private String nombreUsuario;
+    @Schema(name = "fechaCreacion", description = "Fecha de creacion de la orden")
     private LocalDate fechaCreacion;
+    @Schema(name = "estado", description = "Estado en el cual se encuentra la orden", example = "PENDIENTE")
     private String estado;
+    @Schema(name = "medicamentos", description = "Listado de medicamentos asociados a la orden")
     private List<ItemMedicamentoDTO> medicamentos;
 
     public OrdenDTO(Orden orden) {

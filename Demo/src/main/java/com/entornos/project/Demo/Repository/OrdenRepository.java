@@ -1,5 +1,6 @@
 package com.entornos.project.Demo.Repository;
 
+import com.entornos.project.Demo.DTO.OrdenDTO;
 import com.entornos.project.Demo.Model.Orden;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,4 +17,7 @@ public interface OrdenRepository extends JpaRepository<Orden, Long> {
     Page<Orden> findAllByIdUsuario(Long idUsuario, Pageable pageable);
 
     Long id(Long id);
+
+    @Query("SELECT o FROM Orden o WHERE o.estado.nombre =:estado")
+    Page<Orden> findAllByEstado(String estado, Pageable pageable);
 }

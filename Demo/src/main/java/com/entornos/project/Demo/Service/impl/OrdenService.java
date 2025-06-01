@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -135,12 +136,36 @@ public class OrdenService implements IOrdenService {
     public OrdenDTO getOrden(Long idOrden) {
         Optional<Orden> orden = this.ordenRepository.findById(idOrden);
 
-        if(orden.isEmpty()) return null;
+        if(orden.isEmpty()) throw new RuntimeException("No se encontro orden con el id " + idOrden);
 
         OrdenDTO ordenDTO = new OrdenDTO(orden.get());
         ordenDTO.setMedicamentos(this.ordenMedicamentoRepository.findAllByIdOrden(idOrden));
 
         return ordenDTO;
+    }
+
+    @Override
+    public Page<Orden> getAllOrdenesByEstado(String estado, Pageable pageable) {
+        return this.ordenRepository.findAllByEstado(estado, pageable);
+    }
+
+    @Override
+    @Transactional
+    public Orden updateEstadoOrden(Long idOrden, String estado) {
+        Orden ordenUpdated = this.ordenRepository.findById(idOrden).orElse(null);
+        if (ordenUpdated == null) throw new RuntimeException("No se encontro la orden");
+        //Traemos el estado a actualizar
+        Estado estadoDB = this.estadoRepository.findByNombre(estado);
+        if (estadoDB == null) throw new RuntimeException("No se encontro el estado");
+        if(estado.contains("COMPLETADA")){
+            ordenUpdated.setFechaCompletada(LocalDate.now());
+        }
+        if(estado.contains("CANCELADA")){
+            ordenUpdated.setFechaRechazo(LocalDate.now());
+        }
+        ordenUpdated.setIdEstado(estadoDB.getId());
+        ordenUpdated.setFechaModificacion(LocalDate.now());
+        return this.ordenRepository.save(ordenUpdated);
     }
 
     @Autowired
