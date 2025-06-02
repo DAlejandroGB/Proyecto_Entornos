@@ -1,0 +1,265 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary: #2B6CB0;
+  --primary-dark: #2C5282;
+  --primary-light: #4299E1;
+  --secondary: #63B3ED;
+  --accent: #BEE3F8;
+  --background: #EBF8FF;
+  --glass-bg: rgba(255, 255, 255, 0.95);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --text-primary: #2D3748;
+  --text-secondary: #4A5568;
+  --white: #FFFFFF;
+  --error: #E53E3E;
+  --success: #38A169;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.register-container {
+  width: 100%;
+  max-width: 700px;
+  background: rgba(255, 255, 255, 0.97);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 
+    0 10px 20px rgba(0, 0, 0, 0.2),
+    0 5px 8px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+    0 20px 40px rgba(0, 78, 146, 0.25);
+  backdrop-filter: blur(12px);
+  transform: translateY(0);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 2rem;
+}
+
+.register-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 
+    0 20px 30px rgba(0, 0, 0, 0.25),
+    0 10px 12px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.25) inset,
+    0 30px 60px rgba(0, 78, 146, 0.3);
+}
+
+.register-title {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 1.5rem !important;
+  color: var(--text-primary) !important;
+  letter-spacing: -1.5px !important;
+  position: relative;
+  text-align: center;
+  animation: float 6s ease-in-out infinite;
+}
+
+.register-title::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 4px;
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  border-radius: 2px;
+}
+
+.stepper-container {
+  margin-bottom: 2rem;
+}
+
+.form-container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.form-field {
+  margin-bottom: 1rem !important;
+}
+
+.form-field .MuiInputBase-root {
+  border-radius: 10px !important;
+  background-color: var(--background) !important;
+  transition: all 0.3s ease !important;
+  font-size: 0.9rem !important;
+  min-height: 40px !important;
+}
+
+.form-field .MuiInputBase-root:hover {
+  background-color: var(--white) !important;
+}
+
+.form-field .MuiInputBase-root.Mui-focused {
+  background-color: var(--white) !important;
+  box-shadow: 0 0 0 4px rgba(66, 153, 225, 0.15) !important;
+  transform: translateY(-2px) !important;
+}
+
+.form-field .MuiInputLabel-root {
+  font-size: 0.9rem !important;
+  color: var(--text-secondary) !important;
+  font-weight: 500 !important;
+}
+
+.form-field .MuiInputLabel-root.Mui-focused {
+  color: var(--primary) !important;
+}
+
+.form-field .MuiOutlinedInput-notchedOutline {
+  border-color: transparent !important;
+}
+
+.form-field .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: var(--primary) !important;
+}
+
+.form-field .MuiSelect-select {
+  padding: 8.5px 14px !important;
+  min-width: 120px !important;
+}
+
+.form-field .MuiMenuItem-root {
+  font-size: 0.9rem !important;
+  padding: 8px 16px !important;
+}
+
+.form-field .MuiSelect-icon {
+  color: var(--text-secondary) !important;
+  right: 8px !important;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+  color: var(--white) !important;
+  border-radius: 12px !important;
+  padding: 0.7rem 1.5rem !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+  transition: all 0.3s ease !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-submit:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 8px 25px rgba(43, 108, 176, 0.3) !important;
+}
+
+.btn-submit::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: 0.5s;
+}
+
+.btn-submit:hover::before {
+  left: 100%;
+}
+
+.btn-cancel {
+  border: 2px solid var(--error) !important;
+  color: var(--error) !important;
+  border-radius: 12px !important;
+  padding: 0.7rem 1.5rem !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-cancel:hover {
+  background-color: rgba(229, 62, 62, 0.1) !important;
+  transform: translateY(-3px) !important;
+}
+
+.error-message {
+  color: var(--error);
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.9rem 1.1rem;
+  background: rgba(229, 62, 62, 0.1);
+  border-radius: 10px;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@media (max-width: 768px) {
+  .register-container {
+    margin: 1rem;
+    padding: 1.25rem;
+    max-width: 100%;
+  }
+
+  .register-title {
+    font-size: 1.6rem !important;
+  }
+
+  .form-container {
+    max-width: 100%;
+  }
+
+  .form-field .MuiInputBase-root,
+  .form-field .MuiInputLabel-root {
+    font-size: 0.85rem !important;
+  }
+
+  .form-buttons {
+    flex-direction: column;
+  }
+
+  .btn-submit, .btn-cancel {
+    padding: 0.6rem 1.2rem !important;
+  }
+} 
