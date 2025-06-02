@@ -117,7 +117,7 @@ public class OrdenService implements IOrdenService {
         Orden orden = ordenes.getFirst();
         OrdenDTO ordenDTO = new OrdenDTO(orden);
         //Se consultan los medicamentos asociados a esa orden
-        ordenDTO.setMedicamentos(this.ordenMedicamentoRepository.findAllByIdOrden(orden.getId()));
+        ordenDTO.setMedicamentos(this.ordenMedicamentoRepository.findAllByIdOrden(orden.getId()).stream().peek(med -> med.setPrecioMedicamento(med.getPrecioMedicamento()*med.getCantidad())).toList());
         return ordenDTO;
     }
 
@@ -127,7 +127,7 @@ public class OrdenService implements IOrdenService {
         List<OrdenDTO> ordenDTOS = ordenes.getContent().stream().map(orden -> {
             OrdenDTO ordenDTO = new OrdenDTO(orden);
             //Se consultan los medicamentos asociados a esa orden
-            ordenDTO.setMedicamentos(this.ordenMedicamentoRepository.findAllByIdOrden(orden.getId()));
+            ordenDTO.setMedicamentos(this.ordenMedicamentoRepository.findAllByIdOrden(orden.getId()).stream().peek(med -> med.setPrecioMedicamento(med.getPrecioMedicamento()*med.getCantidad())).toList());
             return ordenDTO;
         }).toList();
 
@@ -141,7 +141,7 @@ public class OrdenService implements IOrdenService {
         if(orden.isEmpty()) throw new RuntimeException("No se encontro orden con el id " + idOrden);
 
         OrdenDTO ordenDTO = new OrdenDTO(orden.get());
-        ordenDTO.setMedicamentos(this.ordenMedicamentoRepository.findAllByIdOrden(idOrden));
+        ordenDTO.setMedicamentos(this.ordenMedicamentoRepository.findAllByIdOrden(idOrden).stream().peek(med -> med.setPrecioMedicamento(med.getPrecioMedicamento()*med.getCantidad())).toList());
 
         return ordenDTO;
     }

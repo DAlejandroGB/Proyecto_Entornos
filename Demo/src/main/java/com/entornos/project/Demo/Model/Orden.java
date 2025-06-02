@@ -1,5 +1,6 @@
 package com.entornos.project.Demo.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,10 +40,12 @@ public class Orden {
     private LocalDate fechaModificacion;
 
     //Relaciones
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", insertable = false, updatable = false)
     private Usuario usuario;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_estado", insertable = false, updatable = false)
     private Estado estado;
