@@ -4,6 +4,8 @@ import com.entornos.project.Demo.Service.impl.AuthService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -18,7 +20,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final AuthService authService;  // Asegúrate de que el authService sea inyectado
+    private final AuthService authService;// Asegúrate de que el authService sea inyectado
 
     // Inyección de dependencias a través del constructor
     public SecurityConfig(AuthService authService) {
@@ -31,7 +33,7 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)  // Deshabilitamos CSRF (útil para JWT)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/usuarios/login", "/usuarios/list","/credencial").permitAll()
+                        .requestMatchers("/credencial/login", "/usuarios/list","/credencial","/usuarios").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()// Rutas públicas
                         .requestMatchers(HttpMethod.DELETE, "/usuarios/*").permitAll()
                         .anyRequest().authenticated()  // Rutas protegidas
@@ -44,5 +46,10 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }

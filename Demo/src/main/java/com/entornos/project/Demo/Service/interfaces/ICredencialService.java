@@ -14,4 +14,5 @@ public interface ICredencialService {
     CredencialesDTO eliminarCredencial(Long id);
 
     CredencialesDTO updateCredenciales(CreateCredencialesDTO credencialesDTO);
+    String getRolUsuario(Credencial user);
 }

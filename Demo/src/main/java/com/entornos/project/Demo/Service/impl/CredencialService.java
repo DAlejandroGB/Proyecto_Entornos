@@ -29,7 +29,7 @@ public class CredencialService implements ICredencialService {
 
     @Override
     public CredencialesDTO getCredencialByNombreUsuario(String nombreUsuario) {
-        Credencial credencial = credencialRepository.findByNombreUsuario(nombreUsuario);
+        Credencial credencial = credencialRepository.findCredencialByNombreUsuario(nombreUsuario);
         if (credencial == null) return null;
         return new CredencialesDTO(credencial.getId(), credencial.getNombreUsuario(), credencial.getContrasena(), credencial.getFechaCreacion());
     }
@@ -59,12 +59,17 @@ public class CredencialService implements ICredencialService {
 
     @Override
     public CredencialesDTO updateCredenciales(CreateCredencialesDTO credencialesDTO) {
-        Credencial usuario = this.credencialRepository.findByNombreUsuario(credencialesDTO.getNombreUsuario());
+        Credencial usuario = this.credencialRepository.findCredencialByNombreUsuario(credencialesDTO.getNombreUsuario());
         if (usuario == null) throw new RuntimeException("No se ha encontrado el usuario");
         usuario.setContrasena(credencialesDTO.getContrasena());
 
         Credencial updatedCredencial = this.credencialRepository.save(usuario);
         return new CredencialesDTO(updatedCredencial.getId(), updatedCredencial.getNombreUsuario(), updatedCredencial.getContrasena(), updatedCredencial.getFechaCreacion());
+    }
+
+    @Override
+    public String getRolUsuario(Credencial user) {
+        return this.credencialRepository.getRolByUsername(user.getNombreUsuario());
     }
 
     @Autowired

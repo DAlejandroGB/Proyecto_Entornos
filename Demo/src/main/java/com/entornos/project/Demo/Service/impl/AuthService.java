@@ -6,13 +6,15 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.entornos.project.Demo.Model.Credencial;
 import com.entornos.project.Demo.Repository.CredencialRepository;
 import com.entornos.project.Demo.Service.interfaces.IAuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-import java.util.Optional;
 
 @Service
 public class AuthService implements IAuthService {
@@ -20,30 +22,21 @@ public class AuthService implements IAuthService {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    private final CredencialRepository credencialRepository;
+    private CredencialRepository credencialRepository;
+    private PasswordEncoder passwordEncoder;
 
-
-    public AuthService(CredencialRepository credencialRepository) {
-        this.credencialRepository = credencialRepository;
-    }
 
     public String login(String usuarioNombre, String contrasena) {
-        Optional<Credencial> credencialOpt = Optional.of(credencialRepository.findByNombreUsuario(usuarioNombre));
-
-        if (credencialOpt.isEmpty()) {
-            throw new RuntimeException("Credenciales inválidas");
-        }
-
-        Credencial credencial = credencialOpt.get();
-
-        if (!contrasena.equals(credencial.getContrasena())) {
+        Credencial credencial = credencialRepository.findCredencialByNombreUsuario(usuarioNombre);
+        String password = this.passwordEncoder.encode(contrasena);
+        if (!password.equals(credencial.getContrasena())) {
             throw new RuntimeException("Credenciales inválidas");
         }
         String token = generarJWT(credencial);
         return token;
     }
 
-    private String generarJWT(Credencial credencial) {
+    public String generarJWT(Credencial credencial) {
         Algorithm algorithm = Algorithm.HMAC256(jwtSecret);
         Instant now = Instant.now();
         Date expire = Date.from(now.plus(1, ChronoUnit.DAYS));
@@ -62,5 +55,16 @@ public class AuthService implements IAuthService {
                 .withIssuer("auth0")
                 .build()
                 .verify(token);
+
+    }
+
+    @Autowired
+    public void setPasswordEncoder(@Lazy PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Autowired
+    public void setCredencialRepository(CredencialRepository credencialRepository) {
+        this.credencialRepository = credencialRepository;
     }
 }

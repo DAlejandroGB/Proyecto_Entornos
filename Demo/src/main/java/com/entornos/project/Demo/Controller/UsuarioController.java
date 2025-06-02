@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,26 +58,6 @@ public class UsuarioController {
         return new ResponseEntity<>(this.usuarioService.borrarUsuario(id), HttpStatus.OK);
     }
 
-    @PostMapping({"/login"})
-    public ResponseEntity<String> login(@RequestParam String usuarioNombre, @RequestParam String contrasena) {
-        try {
-            String token = this.authService.login(usuarioNombre, contrasena);
-            return ResponseEntity.ok(token);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(401).body(e.getMessage());
-        }
-    }
-
-    @PostMapping({"/verify"})
-    public ResponseEntity<String> verifyToken(@RequestParam String token) {
-        try {
-            this.authService.verificarToken(token);
-            return ResponseEntity.ok("Token es válido");
-        } catch (Exception var3) {
-            return ResponseEntity.status(401).body("Token no válido");
-        }
-    }
-
     @Autowired
     public void setAuthService(AuthService authService) {
         this.authService = authService;
@@ -86,4 +67,5 @@ public class UsuarioController {
     public void setUsuarioService(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
+
 }

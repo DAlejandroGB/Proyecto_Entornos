@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UsuarioDTO {
+    private Long id;
     @Schema(name = "nombre", description = "Nombres del cliente o usuario")
     private String nombres;
     @Schema(name = "apellidos", description = "Apellidos del cliente o usuario")
@@ -28,12 +29,13 @@ public class UsuarioDTO {
     private LocalDate fechaCreacion;
 
     public UsuarioDTO(Usuario usuario) {
+        this.id = usuario.getId();
         this.nombres = usuario.getNombres();
         this.apellidos = usuario.getApellidos();
         this.email = usuario.getEmail();
         this.telefono = usuario.getTelefono();
         this.direccion = usuario.getDireccion();
-        this.rol = usuario.getRol().getRol();
+        this.rol = usuario.getRol() != null ? usuario.getRol().getRol() : null;
         this.fechaCreacion = usuario.getFechaCreacion();
     }
 }

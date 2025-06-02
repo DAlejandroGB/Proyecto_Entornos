@@ -4,10 +4,15 @@ package com.entornos.project.Demo.Model;
 import com.entornos.project.Demo.DTO.CreateUsuarioDTO;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,7 +20,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name=Usuario.TABLE_NAME)
-public class Usuario implements Serializable {
+public class Usuario implements  Serializable {
     public static final String TABLE_NAME = "usuarios";
 
     @Id

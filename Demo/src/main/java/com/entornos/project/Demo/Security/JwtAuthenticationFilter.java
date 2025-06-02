@@ -1,23 +1,27 @@
 package com.entornos.project.Demo.Security;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.entornos.project.Demo.Repository.CredencialRepository;
+import com.entornos.project.Demo.Repository.UsuarioRepository;
 import com.entornos.project.Demo.Service.impl.AuthService;
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthService authService;
+    private CredencialRepository credencialRepository;
 
     public JwtAuthenticationFilter(AuthService authService) {
         this.authService = authService;
@@ -31,13 +35,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 // Verificar el JWT
                 DecodedJWT decodedJWT = authService.verificarToken(token);
-                String username = decodedJWT.getSubject(); // El nombre de usuario dentro del token
+                String username = decodedJWT.getSubject();// El nombre de usuario dentro del token
 
-                // Si el token es válido, establecer la autenticación en el contexto de seguridad
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        username, null, null); // Aquí solo pasamos el nombre de usuario, ya que no estamos usando contraseñas en el JWT
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                UserDetails usuario = this.credencialRepository.findByNombreUsuario(username);
+
+                var authentication = new UsernamePasswordAuthenticationToken(usuario, null,
+                        usuario.getAuthorities()); //Forzamos un inicio de sesion
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e) {
                 SecurityContextHolder.clearContext();  // Si el token no es válido, limpiamos el contexto de seguridad
             }
@@ -54,5 +58,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }else {
             return null; // Si no hay token, retornamos null
         }
+    }
+
+    @Autowired
+    public void setCredencialRepository(CredencialRepository credencialRepository) {
+        this.credencialRepository = credencialRepository;
     }
 }
