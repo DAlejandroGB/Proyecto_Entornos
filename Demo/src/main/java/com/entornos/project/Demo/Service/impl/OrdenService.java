@@ -37,7 +37,8 @@ public class OrdenService implements IOrdenService {
         if(ordenPendiente == null) {
             Orden orden = new Orden(idUsuario);
             //Traemos el estado pendiente por defecto
-            Estado estadoPendiente = this.estadoRepository.findByNombre("PENDIENNTE");
+            Estado estadoPendiente = this.estadoRepository.findByNombre("PENDIENTE");
+            orden.setIdEstado(estadoPendiente.getId());
             orden.setEstado(estadoPendiente);
             return new OrdenDTO(ordenRepository.save(orden));
 
@@ -62,7 +63,7 @@ public class OrdenService implements IOrdenService {
         OrdenMedicamento ordenMedicamento = getOrdenMedicamento(ordenMedicamentoDTO, ordenDTO, medicamento);
         ordenMedicamentoRepository.findById(ordenMedicamentoRepository.save(ordenMedicamento).getId()).orElseThrow();
 
-        return new OrdenMedicamentoDTO();
+        return new OrdenMedicamentoDTO(ordenMedicamento);
     }
 
     private static OrdenMedicamento getOrdenMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, OrdenDTO ordenDTO, Medicamento medicamento) {
@@ -110,8 +111,9 @@ public class OrdenService implements IOrdenService {
     @Override
     public OrdenDTO getOrdenPendiente(Long idUsuario) {
         //Traemos el estado pendiente
-        Estado estadoPendiente = this.estadoRepository.findByNombre("PENDENTE");
+        Estado estadoPendiente = this.estadoRepository.findByNombre("PENDIENTE");
         List<Orden> ordenes = ordenRepository.findByIdUsuarioAndIdEstado(idUsuario, estadoPendiente.getId());
+        if(ordenes.isEmpty()) return null;
         Orden orden = ordenes.getFirst();
         OrdenDTO ordenDTO = new OrdenDTO(orden);
         //Se consultan los medicamentos asociados a esa orden

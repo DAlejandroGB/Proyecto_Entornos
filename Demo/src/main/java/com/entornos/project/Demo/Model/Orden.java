@@ -6,10 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.print.attribute.standard.MediaSize;
 import java.time.LocalDate;
 
-@Table(name = "ordenes")
+@Table(name = "orden")
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor

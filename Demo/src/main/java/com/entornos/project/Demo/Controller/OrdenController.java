@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -32,7 +31,7 @@ public class OrdenController {
 
     @Operation(summary = "Agregar medicamento a una orden")
     @PostMapping("/addMedicamento")
-    public ResponseEntity<OrdenMedicamentoDTO> addMedicamento(@RequestBody OrdenMedicamentoDTO ordenMedicamentoDTO, @RequestPart(name = "imagen", required = false) MultipartFile imagen,@RequestHeader(name = "idUsuario") Long idUsuario) throws IOException {
+    public ResponseEntity<OrdenMedicamentoDTO> addMedicamento(@RequestBody OrdenMedicamentoDTO ordenMedicamentoDTO, @RequestHeader(name = "idUsuario") Long idUsuario) throws IOException {
         OrdenMedicamentoDTO ordenMedDTO = this.ordenService.addMedicamento(ordenMedicamentoDTO, idUsuario);
         return ResponseEntity.ok(ordenMedDTO);
     }

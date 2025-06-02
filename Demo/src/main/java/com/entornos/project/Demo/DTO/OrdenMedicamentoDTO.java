@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 public class OrdenMedicamentoDTO {
     @Schema(name = "idOrden", description = "Identificador del la orden")
     private Long idOrden;
-    @Schema(name = "nombreMedicamento", description = "Nombre del medicamento")
-    private String nombreMedicamento;
     @Schema(name = "idMedicamento", description = "Identificador del medicamento")
     private Long idMedicamento;
     @Schema(name = "cantidad", description = "Unidades de medicamento a ordenar")
@@ -24,7 +22,6 @@ public class OrdenMedicamentoDTO {
     public OrdenMedicamentoDTO(OrdenMedicamento ordenMedicamento) {
         this.idOrden = ordenMedicamento.getIdOrden();
         this.idMedicamento = ordenMedicamento.getIdMedicamento();
-        this.nombreMedicamento = ordenMedicamento.getMedicamento().getNombre();
         this.cantidad = ordenMedicamento.getCantidad();
         this.imagen = ordenMedicamento.getImagen();
     }

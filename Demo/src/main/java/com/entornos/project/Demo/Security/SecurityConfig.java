@@ -1,6 +1,7 @@
 package com.entornos.project.Demo.Security;
 
 import com.entornos.project.Demo.Service.impl.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,12 +21,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final AuthService authService;// Asegúrate de que el authService sea inyectado
-
-    // Inyección de dependencias a través del constructor
-    public SecurityConfig(AuthService authService) {
-        this.authService = authService;
-    }
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -38,7 +34,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/usuarios/*").permitAll()
                         .anyRequest().authenticated()  // Rutas protegidas
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(authService), UsernamePasswordAuthenticationFilter.class);  // Filtro JWT
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);  // Filtro JWT
 
         return http.build(); // Retornamos la configuración de seguridad
     }
@@ -51,5 +47,10 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Autowired
+    public void setJwtAuthenticationFilter(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 }

@@ -27,9 +27,9 @@ public class OrdenDTO {
 
     public OrdenDTO(Orden orden) {
         this.idOrden = orden.getId();
-        this.nombreUsuario = orden.getUsuario().getNombres().concat(" ").concat(orden.getUsuario().getApellidos()).toUpperCase();
+        this.nombreUsuario = orden.getUsuario() != null ? orden.getUsuario().getNombres().concat(" ").concat(orden.getUsuario().getApellidos()).toUpperCase() : null;
         this.fechaCreacion = orden.getFechaCreacion();
-        this.estado = orden.getEstado().getNombre();
+        this.estado = orden.getEstado() != null ? orden.getEstado().getNombre() : null;
         this.medicamentos = new ArrayList<>();
     }
 }
