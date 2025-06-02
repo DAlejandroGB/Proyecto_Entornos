@@ -26,7 +26,7 @@ export default function Login() {
     setError('');
 
     try {
-      const response = await axios.post(`${API_URL}/usuarios/login`, 
+      const response = await axios.post(`${API_URL}/credencial/login`,
         new URLSearchParams({
           usuarioNombre: formData.nombreUsuario,
           contrasena: formData.password
