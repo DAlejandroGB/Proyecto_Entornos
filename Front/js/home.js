@@ -5,7 +5,7 @@ let carrito = [];
 
 document.addEventListener("DOMContentLoaded", () => {
     token = localStorage.getItem("token");
-    userId = 1; // ID de usuario fijo
+    userId = parseInt(localStorage.getItem("idUsuario")); // ID de usuario fijo
 
     if (token === null) {
         alert("Debes estar logeado para acceder a esta seccion");
@@ -108,7 +108,6 @@ function cargarOrdenPendiente() {
         })
         .catch(error => {
             console.error("Error:", error);
-            alert("Hubo un error al mostrar la orden.");
         });
 }
 

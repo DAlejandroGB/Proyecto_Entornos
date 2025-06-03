@@ -84,7 +84,7 @@ async function login() {
       alert(`Login incorrecto: Credenciales no validas `);
       window.location = 'index.html'
       throw new Error(`Error: ${response.status}`);
-      
+
     }
 
     const data = await response.text();
@@ -95,6 +95,28 @@ async function login() {
     } catch (err) {
       console.error('No se pudo guardar el token:', err);
     }
+    //Cargar usuario al localstorage
+    try {
+      const resp = await fetch(`${API_URL}/credencial/list/user/${nombreUsuario}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Bearer ${data}`
+        }
+      });
+      console.log("La respuesta es: ", resp)
+
+      try {
+        const user = await resp.text();
+        localStorage.setItem('idUsuario', user);
+        console.log('Usuario guardado en localStorage');
+      } catch (err) {
+        console.error('No se pudo guardar el usuario:', err);
+      }
+    } catch (error) {
+      alert(`Ha ocurrido un error cargando al usuario: `, error);
+    }
+
     alert(`Login exitoso: ${nombreUsuario}`);
     window.location = 'home.html'
 
