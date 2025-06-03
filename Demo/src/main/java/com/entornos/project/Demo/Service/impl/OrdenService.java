@@ -161,6 +161,7 @@ public class OrdenService implements IOrdenService {
         Estado estadoDB = this.estadoRepository.findByNombre(estado);
         if (estadoDB == null) throw new RuntimeException("No se encontro el estado");
         if(estado.contains("COMPLETADA")){
+            if(ordenUpdated.getReciboPago() == null || ordenUpdated.getReciboPago().isEmpty()) throw new RuntimeException("No es posible cambiar el estado, por favor cargue el recibo de pago.");
             ordenUpdated.setFechaCompletada(LocalDate.now());
         }
         if(estado.contains("CANCELADA")){

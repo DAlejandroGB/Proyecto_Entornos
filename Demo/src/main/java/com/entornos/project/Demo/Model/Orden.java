@@ -39,6 +39,9 @@ public class Orden {
     @Column(name = "fecha_modificacion")
     private LocalDate fechaModificacion;
 
+    @Column(name = "recibo_pago")
+    private String reciboPago;
+
     //Relaciones
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

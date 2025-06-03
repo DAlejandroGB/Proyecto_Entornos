@@ -22,6 +22,8 @@ public class OrdenDTO {
     private LocalDate fechaCreacion;
     @Schema(name = "estado", description = "Estado en el cual se encuentra la orden", example = "PENDIENTE")
     private String estado;
+    @Schema(name = "reciboPago", description = "Url del recibo de pago de la orden")
+    private String reciboPago;
     @Schema(name = "medicamentos", description = "Listado de medicamentos asociados a la orden")
     private List<ItemMedicamentoDTO> medicamentos;
 
@@ -30,6 +32,7 @@ public class OrdenDTO {
         this.nombreUsuario = orden.getUsuario() != null ? orden.getUsuario().getNombres().concat(" ").concat(orden.getUsuario().getApellidos()).toUpperCase() : null;
         this.fechaCreacion = orden.getFechaCreacion();
         this.estado = orden.getEstado() != null ? orden.getEstado().getNombre() : null;
+        this.reciboPago = orden.getReciboPago();
         this.medicamentos = new ArrayList<>();
     }
 }
