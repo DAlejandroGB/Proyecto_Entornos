@@ -66,13 +66,14 @@ public class OrdenService implements IOrdenService {
         return new OrdenMedicamentoDTO(ordenMedicamento);
     }
 
-    private static OrdenMedicamento getOrdenMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, OrdenDTO ordenDTO, Medicamento medicamento) {
+    @Transactional
+    public OrdenMedicamento getOrdenMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, OrdenDTO ordenDTO, Medicamento medicamento) {
         OrdenMedicamento ordenMedicamento = new OrdenMedicamento();
         ordenMedicamento.setIdOrden(ordenDTO.getIdOrden());
         ordenMedicamento.setIdMedicamento(ordenMedicamentoDTO.getIdMedicamento());
         ordenMedicamento.setCantidad(ordenMedicamentoDTO.getCantidad());
         if(!medicamento.getVentaLibre()){
-            if(ordenMedicamentoDTO.getImagen() == null) throw new RuntimeException("Su medicamento no es de venta libre, por favor cargue la orden médica.");
+            if(ordenMedicamentoDTO.getImagen() == null || ordenMedicamentoDTO.getImagen().isEmpty()) throw new RuntimeException("Su medicamento no es de venta libre, por favor cargue la orden médica.");
             ordenMedicamento.setImagen(ordenMedicamentoDTO.getImagen());
         }
         return ordenMedicamento;
