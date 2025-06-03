@@ -36,6 +36,7 @@ export default function Login() {
     try {
       const formBody = `usuarioNombre=${encodeURIComponent(formData.nombreUsuario)}&contrasena=${encodeURIComponent(formData.password)}`;
 
+<<<<<<< HEAD
       const response = await fetch(`${API_URL}/credencial/login`, {
         method: 'POST',
         headers: {
@@ -59,11 +60,20 @@ export default function Login() {
           idUsuario: data.idUsuario,
           nombreUsuario: data.nombreUsuario,
           rolUsuario: data.rolUsuario
+=======
+      if (response.data && response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('usuario', JSON.stringify({
+          idUsuario: response.data.idUsuario,
+          nombreUsuario: response.data.nombreUsuario,
+          rolUsuario: response.data.rolUsuario
+>>>>>>> c00a195dada3568c3756b402d0e37081fc9fe8a9
         }));
         navigate('/home');
       } else {
         throw new Error('Respuesta inválida del servidor');
       }
+
     } catch (error) {
       console.error('Error durante el login:', error);
       setError(error.message || 'Credenciales no válidas');
@@ -71,6 +81,7 @@ export default function Login() {
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="login-container">
