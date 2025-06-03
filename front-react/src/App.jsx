@@ -3,6 +3,7 @@ import { ThemeProvider, createTheme } from '@mui/material';
 import Login from './components/Login';
 import Register from './components/Register';
 import Home from './components/Home';
+import Perfil from './components/Perfil';
 
 const theme = createTheme({
   palette: {
@@ -27,6 +28,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          
           <Route
             path="/home"
             element={
@@ -44,10 +46,10 @@ export default function App() {
             }
           />
           <Route
-            path="/usuarios"
+            path="/perfil"
             element={
               <PrivateRoute>
-                <div>Página de Usuarios (En desarrollo)</div>
+                <Perfil />
               </PrivateRoute>
             }
           />

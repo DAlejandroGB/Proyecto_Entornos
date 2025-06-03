@@ -1,0 +1,364 @@
+/* ================ PERFIL STYLES ================ */
+.profile-form {
+  background: var(--white);
+  border-radius: var(--border-radius-lg);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--gray-200);
+  position: relative;
+  overflow: hidden;
+  max-width: 600px;
+  margin: 0 auto;
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.profile-form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+}
+
+.profile-form label {
+  display: block;
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: 0.5rem;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+}
+
+.profile-form label:first-child {
+  margin-top: 0;
+}
+
+.profile-form label::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 20px;
+  height: 2px;
+  background: var(--accent-blue);
+  border-radius: 1px;
+}
+
+.profile-form input[type="text"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: var(--transition);
+  background-color: var(--white);
+  color: var(--gray-800);
+  font-weight: 500;
+  position: relative;
+}
+
+.profile-form input[type="text"]:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  transform: translateY(-1px);
+  background-color: var(--blue-ultra-light);
+}
+
+.profile-form input[type="text"]:hover {
+  border-color: var(--accent-blue);
+  background-color: var(--gray-50);
+}
+
+.profile-form p {
+  background: linear-gradient(135deg, var(--gray-50) 0%, var(--blue-ultra-light) 100%);
+  padding: 0.75rem 1rem;
+  border-radius: var(--border-radius);
+  margin: 0;
+  color: var(--gray-700);
+  font-weight: 500;
+  border: 1px solid var(--gray-200);
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-form p::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.05), transparent);
+  transition: left 0.8s;
+}
+
+.profile-form:hover p::before {
+  left: 100%;
+}
+
+/* Estilos especiales para campos no editables */
+.profile-form p[data-field="email"],
+.profile-form p[data-field="rol"],
+.profile-form p[data-field="fecha"] {
+  background: linear-gradient(135deg, var(--blue-light) 0%, var(--blue-ultra-light) 100%);
+  border-color: var(--accent-blue);
+  color: var(--primary-blue);
+  font-weight: 600;
+}
+
+.save-btn {
+  width: 100%;
+  padding: 1rem 2rem;
+  margin-top: 2rem;
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+  color: var(--white);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 700;
+  transition: var(--transition);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.save-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.save-btn:hover::before {
+  left: 100%;
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, var(--primary-blue-light) 0%, var(--accent-blue) 100%);
+}
+
+.save-btn:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow);
+}
+
+/* ================ LOGOUT BOX ================ */
+.logout-box {
+  margin-top: 1rem;
+  background: linear-gradient(135deg, #fef2f2 0%, #fde8e8 100%);
+  padding: 1.5rem;
+  border-radius: var(--border-radius-lg);
+  text-align: center;
+  border: 1px solid #fecaca;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.logout-box::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg, transparent, var(--red), transparent);
+  animation: rotate 4s linear infinite;
+  opacity: 0.1;
+}
+
+.logout-box button {
+  background: linear-gradient(135deg, var(--red) 0%, #f87171 100%);
+  color: var(--white);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.logout-box button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.logout-box button:hover::before {
+  left: 100%;
+}
+
+.logout-box button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ================ INFO MESSAGE ================ */
+.info-message {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  text-align: center;
+  animation: slideInFromBottom 0.5s ease forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+.info-message.success {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  color: var(--green);
+  border: 1px solid #bbf7d0;
+}
+
+.info-message.error {
+  background: linear-gradient(135deg, #fef2f2 0%, #fde8e8 100%);
+  color: var(--red);
+  border: 1px solid #fecaca;
+}
+
+.info-message::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.8s;
+}
+
+.info-message:hover::before {
+  left: 100%;
+}
+
+/* ================ LOADING STATE ================ */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--gray-200);
+  border-top: 4px solid var(--primary-blue);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.loading-text {
+  color: var(--gray-600);
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================ FORM FIELD GROUPS ================ */
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form-group:last-of-type {
+  margin-bottom: 0;
+}
+
+.field-icon {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  color: var(--gray-400);
+  font-size: 1.1rem;
+  pointer-events: none;
+}
+
+.profile-form input[type="text"]:focus + .field-icon {
+  color: var(--primary-blue);
+}
+
+/* ================ ENHANCED HOVER EFFECTS ================ */
+.profile-form:hover {
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-2px);
+}
+
+.profile-form input[type="text"]:not(:focus):hover {
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+}
+
+/* ================ RESPONSIVE ADJUSTMENTS ================ */
+@media (max-width: 768px) {
+  .profile-form {
+    padding: 2rem 1.5rem;
+    margin: 0 1rem;
+  }
+  
+  .save-btn {
+    font-size: 1rem;
+    padding: 0.875rem 1.5rem;
+  }
+  
+  .profile-form label {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-form {
+    padding: 1.5rem 1rem;
+    margin: 0 0.5rem;
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+}

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const API_URL = 'http://localhost:8080';
 
 const Home = () => {
+  const [usuario, setUsuario] = useState(null);
   const [medicamentos, setMedicamentos] = useState([]);
   const [orden, setOrden] = useState(null);
   const [error, setError] = useState(null);
@@ -34,12 +35,14 @@ const Home = () => {
       .then(res => {
         localStorage.setItem('usuarioCompleto', JSON.stringify(res.data));
         setDireccion(res.data.direccion);
+        setUsuario(res.data);  // <-- Agrega esta línea para actualizar el estado usuario
         console.log('Usuario completo:', res.data);
       })
       .catch(err => {
         console.error('Error al obtener datos del usuario:', err);
       });
   }, []);
+
 
 
   useEffect(() => {
@@ -64,7 +67,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    const usuarioData = JSON.parse(localStorage.getItem('usuario'));
+    const usuarioData = JSON.parse(localStorage.getItem('userData'));
     const token = localStorage.getItem('token');
 
     if (!usuarioData?.idUsuario) {
@@ -84,7 +87,6 @@ const Home = () => {
       })
       .catch(async err => {
         if (err.response && err.response.status === 404) {
-          // Orden pendiente no existe, crearla
           try {
             const crearOrdenRes = await axios.post(
               `${API_URL}/api/orden/crearOrdenPendiente/${usuarioData.idUsuario}`,
@@ -99,7 +101,7 @@ const Home = () => {
             setOrdenError(null);
           } catch (crearErr) {
             console.error('Error creando orden pendiente:', crearErr);
-            setOrdenError('No se pudo crear el carrito');
+            setOrdenError('El usuario no tiene un carrito, añade un medicamento primero');
           }
         } else {
           console.error('Error al obtener la orden pendiente:', err.response || err.message);
@@ -109,9 +111,10 @@ const Home = () => {
   }, []);
 
 
+
   const agregarMedicamento = async (med) => {
     try {
-      const usuarioData = JSON.parse(localStorage.getItem('usuario'));
+      const usuarioData = JSON.parse(localStorage.getItem('userData'));
       const token = localStorage.getItem('token');
 
       if (!usuarioData?.idUsuario) {
@@ -123,7 +126,7 @@ const Home = () => {
         idOrden: orden ? orden.idOrden : null,
         idMedicamento: med.id,
         cantidad: 1,
-        imagen: med.imagen || '',
+        imagen: med.imagenMed || '',
       };
 
       await axios.post(`${API_URL}/api/orden/addMedicamento`, body, {
@@ -179,7 +182,7 @@ const Home = () => {
       });
 
       // Luego, recargar la orden actualizada para sincronizar el estado
-      const usuarioData = JSON.parse(localStorage.getItem('usuario'));
+      const usuarioData = JSON.parse(localStorage.getItem('userData'));
       const response = await axios.get(`${API_URL}/api/orden/ordenPendiente/${usuarioData.idUsuario}`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -203,18 +206,26 @@ const Home = () => {
         <nav>
           <ul>
             <li className="active">Inicio</li>
-            <li>Usuario</li>
-            <li>Historial</li>
-            <li>Configuración</li>
+            <li onClick={() => navigate('/perfil')}>Usuario</li>
+            <li onClick={() => navigate('/historial')}>Historial</li>
           </ul>
         </nav>
         <div className="register-box">
           <p>¿Eres Gerente de una Farmacia?</p>
           <button onClick={handleRegistroClick}>Regístrate</button>
         </div>
+        <div className="logout-box">
+          <button onClick={() => {
+            localStorage.clear();
+            navigate('/');
+          }}>
+            Cerrar sesión
+          </button>
+        </div>
       </aside>
 
       <main className="main-content">
+        <h3>Hola, {usuario?.nombres || 'Usuario'}</h3>
         <h2 className="section-title">Todos los Medicamentos</h2>
         {error ? (
           <p className="error">{error}</p>
@@ -245,7 +256,7 @@ const Home = () => {
         <div className="address-box">
           <p className="section-title">Tu dirección</p>
           <p>{direccion || 'No has configurado tu dirección'}</p>
-          <button className="small-btn">Cambiar</button>
+          <button className='small-btn' onClick={() => navigate('/Perfil')}>Cambiar</button>
         </div>
 
 

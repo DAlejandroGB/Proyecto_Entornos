@@ -1,5 +1,5 @@
 :root {
-  --primary-blue: #2563eb;
+  --primary-blue: #8baaec;
   --primary-blue-light: #3b82f6;
   --primary-blue-dark: #1d4ed8;
   --accent-blue: #60a5fa;
@@ -75,7 +75,7 @@ body {
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+  background: linear-gradient(180deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
 }
 
 .logo {
@@ -242,7 +242,7 @@ body {
   left: 0;
   right: 0;
   height: 200px;
-  background: linear-gradient(135deg, var(--blue-ultra-light) 0%, transparent 100%);
+  background: linear-gradient(180deg, var(--blue-ultra-light) 0%, transparent 100%);
   pointer-events: none;
 }
 
