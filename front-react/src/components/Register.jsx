@@ -143,134 +143,138 @@ export default function Register() {
   };
 
   return (
-    <div className="register-container">
-      <h3 className="register-title">
-        <span>¿</span>
-        TeFaltanPastillas
-        <span>?</span>
-      </h3>
-
-      {activeStep === 0 ? (
-        <form className="register-form" onSubmit={handleUserSubmit}>
-          <div className="form-group">
-            <label htmlFor="nombre">Nombre *</label>
-            <input
-              type="text"
-              id="nombre"
-              name="nombre"
-              placeholder="Nombre"
-              value={userData.nombre}
-              onChange={handleUserDataChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="apellido">Apellido *</label>
-            <input
-              type="text"
-              id="apellido"
-              name="apellido"
-              placeholder="Apellido"
-              value={userData.apellido}
-              onChange={handleUserDataChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email">Email *</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="correo@ejemplo.com"
-              value={userData.email}
-              onChange={handleUserDataChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="telefono">Teléfono</label>
-            <input
-              type="tel"
-              id="telefono"
-              name="telefono"
-              placeholder="Teléfono"
-              value={userData.telefono}
-              onChange={handleUserDataChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="direccion">Dirección</label>
-            <input
-              type="text"
-              id="direccion"
-              name="direccion"
-              placeholder="Dirección"
-              value={userData.direccion}
-              onChange={handleUserDataChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="rol">Rol *</label>
-            <select
-              id="rol"
-              name="rol"
-              value={userData.rol}
-              onChange={handleUserDataChange}
-              required
-            >
-              <option value="">Seleccione un rol</option>
-              <option value="GERENTE">Gerente</option>
-              <option value="CLIENTE">Cliente</option>
-            </select>
-          </div>
-          {error && <div className="error-message">{error}</div>}
-          <div className="form-buttons">
-            <button type="submit" className="btn-register">
-              Siguiente
-            </button>
-            <button type="button" className="btn-back" onClick={handleCancel}>
-              Cancelar
-            </button>
-          </div>
-        </form>
-      ) : (
-        <form className="register-form" onSubmit={handleCredentialSubmit}>
-          <div className="form-group">
-            <label htmlFor="usuarioNombre">Nombre de usuario *</label>
-            <input
-              type="text"
-              id="usuarioNombre"
-              name="usuarioNombre"
-              placeholder="username"
-              value={credentialData.usuarioNombre}
-              onChange={handleCredentialChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="contrasena">Contraseña *</label>
-            <input
-              type="password"
-              id="contrasena"
-              name="contrasena"
-              placeholder="********"
-              value={credentialData.contrasena}
-              onChange={handleCredentialChange}
-              required
-            />
-          </div>
-          {error && <div className="error-message">{error}</div>}
-          <div className="form-buttons">
-            <button type="submit" className="btn-register">
-              Registrarse
-            </button>
-            <button type="button" className="btn-back" onClick={() => setActiveStep(0)}>
-              Atrás
-            </button>
-          </div>
-        </form>
-      )}
-    </div>
+    <>
+      <div className="animated-background"></div>
+      <div className="login-wrapper">
+        <div className="register-container">
+          <h3 className="login-title">
+            <span>¿</span>
+            TeFaltanPastillas
+            <span>?</span>
+          </h3>
+          {activeStep === 0 ? (
+            <form className="register-form" onSubmit={handleUserSubmit}>
+              <div className="form-group">
+                <label htmlFor="nombre">Nombre *</label>
+                <input
+                  type="text"
+                  id="nombre"
+                  name="nombre"
+                  placeholder="Nombre"
+                  value={userData.nombre}
+                  onChange={handleUserDataChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="apellido">Apellido *</label>
+                <input
+                  type="text"
+                  id="apellido"
+                  name="apellido"
+                  placeholder="Apellido"
+                  value={userData.apellido}
+                  onChange={handleUserDataChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="email">Email *</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="correo@ejemplo.com"
+                  value={userData.email}
+                  onChange={handleUserDataChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="telefono">Teléfono</label>
+                <input
+                  type="tel"
+                  id="telefono"
+                  name="telefono"
+                  placeholder="Teléfono"
+                  value={userData.telefono}
+                  onChange={handleUserDataChange}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="direccion">Dirección</label>
+                <input
+                  type="text"
+                  id="direccion"
+                  name="direccion"
+                  placeholder="Dirección"
+                  value={userData.direccion}
+                  onChange={handleUserDataChange}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="rol">Rol *</label>
+                <select
+                  id="rol"
+                  name="rol"
+                  value={userData.rol}
+                  onChange={handleUserDataChange}
+                  required
+                >
+                  <option value="">Seleccione un rol</option>
+                  <option value="GERENTE">Gerente</option>
+                  <option value="CLIENTE">Cliente</option>
+                </select>
+              </div>
+              {error && <div className="error-message">{error}</div>}
+              <div className="form-buttons">
+                <button type="submit" className="btn-login">
+                  Siguiente
+                </button>
+                <button type="button" className="btn-signup" onClick={handleCancel}>
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          ) : (
+            <form className="register-form" onSubmit={handleCredentialSubmit}>
+              <div className="form-group">
+                <label htmlFor="usuarioNombre">Nombre de usuario *</label>
+                <input
+                  type="text"
+                  id="usuarioNombre"
+                  name="usuarioNombre"
+                  placeholder="username"
+                  value={credentialData.usuarioNombre}
+                  onChange={handleCredentialChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="contrasena">Contraseña *</label>
+                <input
+                  type="password"
+                  id="contrasena"
+                  name="contrasena"
+                  placeholder="********"
+                  value={credentialData.contrasena}
+                  onChange={handleCredentialChange}
+                  required
+                />
+              </div>
+              {error && <div className="error-message">{error}</div>}
+              <div className="form-buttons">
+                <button type="submit" className="btn-login">
+                  Registrarse
+                </button>
+                <button type="button" className="btn-signup" onClick={() => setActiveStep(0)}>
+                  Atrás
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+      </div>
+    </>
   );
 } 

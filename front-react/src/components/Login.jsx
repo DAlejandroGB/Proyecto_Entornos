@@ -36,7 +36,6 @@ export default function Login() {
     try {
       const formBody = `usuarioNombre=${encodeURIComponent(formData.nombreUsuario)}&contrasena=${encodeURIComponent(formData.password)}`;
 
-<<<<<<< HEAD
       const response = await fetch(`${API_URL}/credencial/login`, {
         method: 'POST',
         headers: {
@@ -60,20 +59,11 @@ export default function Login() {
           idUsuario: data.idUsuario,
           nombreUsuario: data.nombreUsuario,
           rolUsuario: data.rolUsuario
-=======
-      if (response.data && response.data.token) {
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('usuario', JSON.stringify({
-          idUsuario: response.data.idUsuario,
-          nombreUsuario: response.data.nombreUsuario,
-          rolUsuario: response.data.rolUsuario
->>>>>>> c00a195dada3568c3756b402d0e37081fc9fe8a9
         }));
         navigate('/home');
       } else {
         throw new Error('Respuesta inválida del servidor');
       }
-
     } catch (error) {
       console.error('Error durante el login:', error);
       setError(error.message || 'Credenciales no válidas');
@@ -82,65 +72,69 @@ export default function Login() {
     }
   };
 
-
   return (
-    <div className="login-container">
-      <div className="login-left">
-        <h3 className="login-title">
-          <span>¿</span>
-          TeFaltanPastillas
-          <span>?</span>
-        </h3>
-        <form className="login-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="nombreUsuario">Nombre de usuario *</label>
-            <input
-              type="text"
-              id="nombreUsuario"
-              name="nombreUsuario"
-              placeholder="username"
-              value={formData.nombreUsuario}
-              onChange={handleChange}
-              required
-              disabled={isLoading}
-            />
+    <>
+      <div className="animated-background"></div>
+      <div className="login-wrapper">
+        <div className="login-container">
+          <div className="login-left">
+            <h3 className="login-title">
+              <span>¿</span>
+              TeFaltanPastillas
+              <span>?</span>
+            </h3>
+            <form className="login-form" onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="nombreUsuario">Nombre de usuario *</label>
+                <input
+                  type="text"
+                  id="nombreUsuario"
+                  name="nombreUsuario"
+                  placeholder="username"
+                  value={formData.nombreUsuario}
+                  onChange={handleChange}
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="password">Contraseña *</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="********"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+              {error && <div className="error-message">{error}</div>}
+              <div className="form-buttons">
+                <button 
+                  type="submit" 
+                  className="btn-login"
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Iniciando sesión...' : 'INICIAR SESIÓN'}
+                </button>
+                <button 
+                  type="button" 
+                  className="btn-signup" 
+                  onClick={() => navigate('/register')}
+                  disabled={isLoading}
+                >
+                  REGISTRATE
+                </button>
+              </div>
+            </form>
           </div>
-          <div className="form-group">
-            <label htmlFor="password">Contraseña *</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="********"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              disabled={isLoading}
-            />
+          <div className="login-right">
+            <img src="/images/fondo_login.jpg" alt="Medicinas" className="medicine-icon" />
           </div>
-          {error && <div className="error-message">{error}</div>}
-          <div className="form-buttons">
-            <button 
-              type="submit" 
-              className="btn-login"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Iniciando sesión...' : 'INICIAR SESIÓN'}
-            </button>
-            <button 
-              type="button" 
-              className="btn-signup" 
-              onClick={() => navigate('/register')}
-              disabled={isLoading}
-            >
-              REGISTRATE
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
-      <div className="login-right">
-        <img src="/images/fondo_login.jpg" alt="Medicinas" className="medicine-icon" />
-      </div>
-    </div>
+    </>
   );
 } 

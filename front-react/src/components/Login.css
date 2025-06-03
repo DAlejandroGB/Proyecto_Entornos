@@ -7,7 +7,7 @@
   --secondary: #63B3ED;
   --accent: #BEE3F8;
   --background: #EBF8FF;
-  --glass-bg: rgba(255, 255, 255, 0.95);
+  --glass-bg: rgba(255, 255, 255, 0.97);
   --glass-border: rgba(255, 255, 255, 0.2);
   --text-primary: #2D3748;
   --text-secondary: #4A5568;
@@ -23,15 +23,16 @@
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-body {
+.animated-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   background: linear-gradient(-45deg, #000428, #004e92, #2a5298, #4675b8, #00d4ff);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  animation: gradientBG 12s ease infinite;
   background-size: 400% 400%;
+  animation: gradientBG 12s ease infinite;
+  z-index: -1;
 }
 
 @keyframes gradientBG {
@@ -44,6 +45,15 @@ body {
   100% {
     background-position: 0% 50%;
   }
+}
+
+.login-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
 }
 
 .login-container {
@@ -164,75 +174,6 @@ body {
 .form-group input::placeholder {
   color: #A0AEC0;
   font-size: 0.95rem;
-}
-
-.form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 1.5rem 0;
-}
-
-.remember-me {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-}
-
-.remember-me input[type="checkbox"] {
-  appearance: none;
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--primary);
-  border-radius: 5px;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.2s ease;
-}
-
-.remember-me input[type="checkbox"]:checked {
-  background: var(--primary);
-}
-
-.remember-me input[type="checkbox"]:checked::before {
-  content: '✓';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  font-size: 11px;
-}
-
-.remember-me label {
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  font-weight: 500;
-  user-select: none;
-}
-
-.forgot-password {
-  color: var(--primary);
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  position: relative;
-}
-
-.forgot-password::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--primary);
-  transition: width 0.3s ease;
-}
-
-.forgot-password:hover::after {
-  width: 100%;
 }
 
 .form-buttons {
