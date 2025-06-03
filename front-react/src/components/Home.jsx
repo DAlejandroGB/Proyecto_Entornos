@@ -17,11 +17,30 @@ const Home = () => {
   const [direccion, setDireccion] = useState('');
 
   useEffect(() => {
-    const usuarioData = JSON.parse(localStorage.getItem('usuario'));
-    if (usuarioData?.direccion) {
-      setDireccion(usuarioData.direccion);
-    };
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    const idUsuario = userData?.idUsuario;
+    const token = localStorage.getItem('token');
+
+    if (!idUsuario) {
+      console.error('ID de usuario no encontrado');
+      return;
+    }
+
+    axios.get(`${API_URL}/usuarios/list/${idUsuario}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(res => {
+        localStorage.setItem('usuarioCompleto', JSON.stringify(res.data));
+        setDireccion(res.data.direccion);
+        console.log('Usuario completo:', res.data);
+      })
+      .catch(err => {
+        console.error('Error al obtener datos del usuario:', err);
+      });
   }, []);
+
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -48,13 +67,13 @@ const Home = () => {
     const usuarioData = JSON.parse(localStorage.getItem('usuario'));
     const token = localStorage.getItem('token');
 
-    if (!usuarioData?.id) {
+    if (!usuarioData?.idUsuario) {
       console.log('usuarioData localStorage:', usuarioData);
       setOrdenError('Usuario no autenticado');
       return;
     }
 
-    axios.get(`${API_URL}/api/orden/ordenPendiente/${usuarioData.id}`, {
+    axios.get(`${API_URL}/api/orden/ordenPendiente/${usuarioData.idUsuario}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -68,7 +87,7 @@ const Home = () => {
           // Orden pendiente no existe, crearla
           try {
             const crearOrdenRes = await axios.post(
-              `${API_URL}/api/orden/crearOrdenPendiente/${usuarioData.id}`,
+              `${API_URL}/api/orden/crearOrdenPendiente/${usuarioData.idUsuario}`,
               {},
               {
                 headers: {
@@ -95,7 +114,7 @@ const Home = () => {
       const usuarioData = JSON.parse(localStorage.getItem('usuario'));
       const token = localStorage.getItem('token');
 
-      if (!usuarioData?.id) {
+      if (!usuarioData?.idUsuario) {
         setOrdenError('Usuario no autenticado');
         return;
       }
@@ -110,12 +129,12 @@ const Home = () => {
       await axios.post(`${API_URL}/api/orden/addMedicamento`, body, {
         headers: {
           'Authorization': `Bearer ${token}`,
-          'idUsuario': usuarioData.id
+          'idUsuario': usuarioData.idUsuario
         }
       });
 
       // Luego, hacer GET para obtener la orden actualizada
-      const resOrdenActualizada = await axios.get(`${API_URL}/api/orden/ordenPendiente/${usuarioData.id}`, {
+      const resOrdenActualizada = await axios.get(`${API_URL}/api/orden/ordenPendiente/${usuarioData.idUsuario}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -161,7 +180,7 @@ const Home = () => {
 
       // Luego, recargar la orden actualizada para sincronizar el estado
       const usuarioData = JSON.parse(localStorage.getItem('usuario'));
-      const response = await axios.get(`${API_URL}/api/orden/ordenPendiente/${usuarioData.id}`, {
+      const response = await axios.get(`${API_URL}/api/orden/ordenPendiente/${usuarioData.idUsuario}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
