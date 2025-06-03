@@ -1,21 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import {
-  Container,
-  Box,
-  TextField,
-  Button,
-  Typography,
-  Grid,
-  MenuItem,
-  Stepper,
-  Step,
-  StepLabel,
-} from '@mui/material';
 import './Register.css';
 
 const API_URL = 'http://localhost:8080';
+
+// Configuración global de axios
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+axios.defaults.headers.post['Accept'] = 'application/json';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -38,38 +30,69 @@ export default function Register() {
     const { name, value } = e.target;
     setUserData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value.trim()
     }));
+    setError('');
   };
 
   const handleCredentialChange = (e) => {
     const { name, value } = e.target;
     setCredentialData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value.trim()
     }));
+    setError('');
   };
 
   const handleUserSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
+    if (!userData.nombre || !userData.apellido || !userData.email || !userData.rol) {
+      setError('Por favor complete todos los campos requeridos');
+      return;
+    }
+
     try {
-      const response = await axios.post(`${API_URL}/usuarios/`, userData);
+      // Convertir el rol de string a number
+      const idRol = userData.rol === 'GERENTE' ? 1 : 2;
+
+      const userDataToSend = {
+        nombres: userData.nombre,
+        apellidos: userData.apellido,
+        email: userData.email,
+        telefono: userData.telefono || '',
+        direccion: userData.direccion || '',
+        idRol: idRol
+      };
+
+      console.log('Enviando datos de usuario:', userDataToSend);
+
+      const response = await axios.post(`${API_URL}/usuarios`, userDataToSend);
       
-      if (response.data) {
+      console.log('Respuesta del servidor (usuario):', response.data);
+
+      if (response.data && response.data.id) {
         localStorage.setItem('usuario', JSON.stringify(response.data));
         setActiveStep(1);
+      } else {
+        throw new Error('No se recibió el ID del usuario del servidor');
       }
     } catch (error) {
-      setError('Error al registrar usuario');
-      console.error('Error registrando usuario:', error);
+      console.error('Error completo:', error);
+      console.error('Error registrando usuario:', error.response?.data || error.message);
+      setError(error.response?.data?.message || error.message || 'Error al registrar usuario');
     }
   };
 
   const handleCredentialSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    if (!credentialData.usuarioNombre || !credentialData.contrasena) {
+      setError('Por favor complete todos los campos');
+      return;
+    }
 
     const usuarioGuardado = localStorage.getItem('usuario');
     if (!usuarioGuardado) {
@@ -80,19 +103,28 @@ export default function Register() {
     const usuario = JSON.parse(usuarioGuardado);
 
     try {
-      const response = await axios.post(`${API_URL}/credencial/`, {
-        usuario: { id: usuario.id },
-        usuarioNombre: credentialData.usuarioNombre,
+      const credentialDataToSend = {
+        idUsuario: usuario.id,
+        nombreUsuario: credentialData.usuarioNombre,
         contrasena: credentialData.contrasena
-      });
+      };
+
+      console.log('Enviando datos de credenciales:', credentialDataToSend);
+
+      const response = await axios.post(`${API_URL}/credencial`, credentialDataToSend);
+
+      console.log('Respuesta del servidor (credenciales):', response.data);
 
       if (response.data) {
         localStorage.removeItem('usuario');
         navigate('/');
+      } else {
+        throw new Error('No se recibió confirmación del servidor');
       }
     } catch (error) {
-      setError('Error al registrar credenciales');
-      console.error('Error registrando credenciales:', error);
+      console.error('Error completo:', error);
+      console.error('Error registrando credenciales:', error.response?.data || error.message);
+      setError(error.response?.data?.message || error.message || 'Error al registrar credenciales');
     }
   };
 
@@ -110,195 +142,135 @@ export default function Register() {
     navigate('/');
   };
 
-  const steps = ['Datos de Usuario', 'Credenciales'];
-
   return (
-    <Container component="main" maxWidth="lg">
-      <Box className="register-container">
-        <Typography component="h1" variant="h4" className="register-title">
-          <span style={{ color: 'var(--primary)' }}>¿</span>
-          TeFaltanPastillas
-          <span style={{ color: 'var(--primary)' }}>?</span>
-        </Typography>
-        
-        <Box className="stepper-container">
-          <Stepper activeStep={activeStep}>
-            {steps.map((label) => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-        </Box>
+    <div className="register-container">
+      <h3 className="register-title">
+        <span>¿</span>
+        TeFaltanPastillas
+        <span>?</span>
+      </h3>
 
-        <Box className="form-container">
-          {activeStep === 0 ? (
-            <Box component="form" onSubmit={handleUserSubmit}>
-              <Grid container spacing={1.5}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="nombre"
-                    label="Nombre"
-                    value={userData.nombre}
-                    onChange={handleUserDataChange}
-                    className="form-field"
-                    size="small"
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="apellido"
-                    label="Apellido"
-                    value={userData.apellido}
-                    onChange={handleUserDataChange}
-                    className="form-field"
-                    size="small"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="email"
-                    label="Email"
-                    type="email"
-                    value={userData.email}
-                    onChange={handleUserDataChange}
-                    className="form-field"
-                    size="small"
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    name="telefono"
-                    label="Teléfono"
-                    value={userData.telefono}
-                    onChange={handleUserDataChange}
-                    className="form-field"
-                    size="small"
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    select
-                    name="rol"
-                    label="Rol"
-                    value={userData.rol}
-                    onChange={handleUserDataChange}
-                    className="form-field"
-                    size="small"
-                    SelectProps={{
-                      MenuProps: {
-                        PaperProps: {
-                          style: {
-                            maxHeight: 200
-                          }
-                        }
-                      }
-                    }}
-                  >
-                    <MenuItem value="">Seleccionar rol</MenuItem>
-                    <MenuItem value="gerente">Gerente</MenuItem>
-                    <MenuItem value="cliente">Cliente</MenuItem>
-                  </TextField>
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    name="direccion"
-                    label="Dirección"
-                    value={userData.direccion}
-                    onChange={handleUserDataChange}
-                    className="form-field"
-                    size="small"
-                    multiline
-                    rows={2}
-                  />
-                </Grid>
-              </Grid>
-              {error && (
-                <Typography className="error-message">
-                  {error}
-                </Typography>
-              )}
-              <Box className="form-buttons">
-                <Button
-                  type="submit"
-                  fullWidth
-                  className="btn-submit"
-                >
-                  Siguiente
-                </Button>
-                <Button
-                  fullWidth
-                  onClick={handleCancel}
-                  className="btn-cancel"
-                >
-                  Cancelar
-                </Button>
-              </Box>
-            </Box>
-          ) : (
-            <Box component="form" onSubmit={handleCredentialSubmit}>
-              <Grid container spacing={1.5}>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="usuarioNombre"
-                    label="Nombre de Usuario"
-                    value={credentialData.usuarioNombre}
-                    onChange={handleCredentialChange}
-                    className="form-field"
-                    size="small"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="contrasena"
-                    label="Contraseña"
-                    type="password"
-                    value={credentialData.contrasena}
-                    onChange={handleCredentialChange}
-                    className="form-field"
-                    size="small"
-                  />
-                </Grid>
-              </Grid>
-              {error && (
-                <Typography className="error-message">
-                  {error}
-                </Typography>
-              )}
-              <Box className="form-buttons">
-                <Button
-                  type="submit"
-                  fullWidth
-                  className="btn-submit"
-                >
-                  Registrar
-                </Button>
-                <Button
-                  fullWidth
-                  onClick={handleCancel}
-                  className="btn-cancel"
-                >
-                  Cancelar
-                </Button>
-              </Box>
-            </Box>
-          )}
-        </Box>
-      </Box>
-    </Container>
+      {activeStep === 0 ? (
+        <form className="register-form" onSubmit={handleUserSubmit}>
+          <div className="form-group">
+            <label htmlFor="nombre">Nombre *</label>
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              placeholder="Nombre"
+              value={userData.nombre}
+              onChange={handleUserDataChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="apellido">Apellido *</label>
+            <input
+              type="text"
+              id="apellido"
+              name="apellido"
+              placeholder="Apellido"
+              value={userData.apellido}
+              onChange={handleUserDataChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="email">Email *</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="correo@ejemplo.com"
+              value={userData.email}
+              onChange={handleUserDataChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="telefono">Teléfono</label>
+            <input
+              type="tel"
+              id="telefono"
+              name="telefono"
+              placeholder="Teléfono"
+              value={userData.telefono}
+              onChange={handleUserDataChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="direccion">Dirección</label>
+            <input
+              type="text"
+              id="direccion"
+              name="direccion"
+              placeholder="Dirección"
+              value={userData.direccion}
+              onChange={handleUserDataChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="rol">Rol *</label>
+            <select
+              id="rol"
+              name="rol"
+              value={userData.rol}
+              onChange={handleUserDataChange}
+              required
+            >
+              <option value="">Seleccione un rol</option>
+              <option value="GERENTE">Gerente</option>
+              <option value="CLIENTE">Cliente</option>
+            </select>
+          </div>
+          {error && <div className="error-message">{error}</div>}
+          <div className="form-buttons">
+            <button type="submit" className="btn-register">
+              Siguiente
+            </button>
+            <button type="button" className="btn-back" onClick={handleCancel}>
+              Cancelar
+            </button>
+          </div>
+        </form>
+      ) : (
+        <form className="register-form" onSubmit={handleCredentialSubmit}>
+          <div className="form-group">
+            <label htmlFor="usuarioNombre">Nombre de usuario *</label>
+            <input
+              type="text"
+              id="usuarioNombre"
+              name="usuarioNombre"
+              placeholder="username"
+              value={credentialData.usuarioNombre}
+              onChange={handleCredentialChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="contrasena">Contraseña *</label>
+            <input
+              type="password"
+              id="contrasena"
+              name="contrasena"
+              placeholder="********"
+              value={credentialData.contrasena}
+              onChange={handleCredentialChange}
+              required
+            />
+          </div>
+          {error && <div className="error-message">{error}</div>}
+          <div className="form-buttons">
+            <button type="submit" className="btn-register">
+              Registrarse
+            </button>
+            <button type="button" className="btn-back" onClick={() => setActiveStep(0)}>
+              Atrás
+            </button>
+          </div>
+        </form>
+      )}
+    </div>
   );
 } 

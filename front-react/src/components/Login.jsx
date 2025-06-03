@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import './Login.css';
 
 const API_URL = 'http://localhost:8080';
@@ -12,39 +11,64 @@ export default function Login() {
     password: '',
   });
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value.trim()
     }));
+    setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
+
+    if (!formData.nombreUsuario || !formData.password) {
+      setError('Por favor complete todos los campos');
+      setIsLoading(false);
+      return;
+    }
 
     try {
-      const response = await axios.post(`${API_URL}/credencial/login`,
-        new URLSearchParams({
-          usuarioNombre: formData.nombreUsuario,
-          contrasena: formData.password
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        }
-      );
+      const formBody = `usuarioNombre=${encodeURIComponent(formData.nombreUsuario)}&contrasena=${encodeURIComponent(formData.password)}`;
 
-      if (response.data) {
-        localStorage.setItem('token', response.data);
+      const response = await fetch(`${API_URL}/credencial/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json'
+        },
+        body: formBody
+      });
+
+      if (!response.ok) {
+        console.error('Error de respuesta:', response.status);
+        throw new Error('Credenciales no válidas');
+      }
+
+      const data = await response.json();
+      console.log('Respuesta del servidor:', data);
+      
+      if (data && data.token) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userData', JSON.stringify({
+          idUsuario: data.idUsuario,
+          nombreUsuario: data.nombreUsuario,
+          rolUsuario: data.rolUsuario
+        }));
         navigate('/home');
+      } else {
+        throw new Error('Respuesta inválida del servidor');
       }
     } catch (error) {
-      setError('Credenciales inválidas');
       console.error('Error durante el login:', error);
+      setError(error.message || 'Credenciales no válidas');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -67,6 +91,7 @@ export default function Login() {
               value={formData.nombreUsuario}
               onChange={handleChange}
               required
+              disabled={isLoading}
             />
           </div>
           <div className="form-group">
@@ -79,26 +104,24 @@ export default function Login() {
               value={formData.password}
               onChange={handleChange}
               required
+              disabled={isLoading}
             />
-          </div>
-          <div className="form-options">
-            <div className="remember-me">
-              <input
-                type="checkbox"
-                id="remember"
-                checked
-                disabled
-              />
-              <label htmlFor="remember">Recuerdame</label>
-            </div>
-            <a href="#" className="forgot-password">¿Olvidaste tu contraseña?</a>
           </div>
           {error && <div className="error-message">{error}</div>}
           <div className="form-buttons">
-            <button type="submit" className="btn-login">
-              INICIAR SESIÓN
+            <button 
+              type="submit" 
+              className="btn-login"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Iniciando sesión...' : 'INICIAR SESIÓN'}
             </button>
-            <button type="button" className="btn-signup" onClick={() => navigate('/register')}>
+            <button 
+              type="button" 
+              className="btn-signup" 
+              onClick={() => navigate('/register')}
+              disabled={isLoading}
+            >
               REGISTRATE
             </button>
           </div>
