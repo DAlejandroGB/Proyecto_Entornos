@@ -26,7 +26,7 @@ export default function Login() {
     setError('');
 
     try {
-      const response = await axios.post(`${API_URL}/usuarios/login`, 
+      const response = await axios.post(`${API_URL}/credencial/login`,
         new URLSearchParams({
           usuarioNombre: formData.nombreUsuario,
           contrasena: formData.password
@@ -38,15 +38,22 @@ export default function Login() {
         }
       );
 
-      if (response.data) {
-        localStorage.setItem('token', response.data);
+      if (response.data && response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('usuario', JSON.stringify({
+          idUsuario: response.data.idUsuario,
+          nombreUsuario: response.data.nombreUsuario,
+          rolUsuario: response.data.rolUsuario
+        }));
         navigate('/home');
       }
+
     } catch (error) {
       setError('Credenciales inválidas');
       console.error('Error durante el login:', error);
     }
   };
+
 
   return (
     <div className="login-container">

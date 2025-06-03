@@ -1,138 +1,258 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import './Home.css';
 import { useNavigate } from 'react-router-dom';
-import {
-  Container,
-  Box,
-  Typography,
-  Button,
-  Grid,
-  Card,
-  CardContent,
-  CardMedia,
-} from '@mui/material';
-import { MedicationOutlined, PersonOutline } from '@mui/icons-material';
 
-export default function Home() {
+const API_URL = 'http://localhost:8080';
+
+const Home = () => {
+  const [medicamentos, setMedicamentos] = useState([]);
+  const [orden, setOrden] = useState(null);
+  const [error, setError] = useState(null);
+  const [ordenError, setOrdenError] = useState(null);
   const navigate = useNavigate();
+  const handleRegistroClick = () => {
+    navigate('/Register'); // Ajusta la ruta según tu estructura
+  };
+  const [direccion, setDireccion] = useState('');
+
+  useEffect(() => {
+    const usuarioData = JSON.parse(localStorage.getItem('usuario'));
+    if (usuarioData?.direccion) {
+      setDireccion(usuarioData.direccion);
+    };
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    fetch(`${API_URL}/api/medicamentos`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Error en la respuesta del servidor');
+        return res.json();
+      })
+      .then((data) => {
+        setMedicamentos(data);
+      })
+      .catch((err) => {
+        console.error('Error al obtener medicamentos:', err);
+        setError('Hubo un error al cargar los medicamentos.');
+      });
+  }, []);
+
+  useEffect(() => {
+    const usuarioData = JSON.parse(localStorage.getItem('usuario'));
+    const token = localStorage.getItem('token');
+
+    if (!usuarioData?.id) {
+      console.log('usuarioData localStorage:', usuarioData);
+      setOrdenError('Usuario no autenticado');
+      return;
+    }
+
+    axios.get(`${API_URL}/api/orden/ordenPendiente/${usuarioData.id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(res => {
+        setOrden(res.data);
+        console.log('Orden recibida:', res.data);
+      })
+      .catch(async err => {
+        if (err.response && err.response.status === 404) {
+          // Orden pendiente no existe, crearla
+          try {
+            const crearOrdenRes = await axios.post(
+              `${API_URL}/api/orden/crearOrdenPendiente/${usuarioData.id}`,
+              {},
+              {
+                headers: {
+                  'Authorization': `Bearer ${token}`
+                }
+              }
+            );
+            setOrden(crearOrdenRes.data);
+            setOrdenError(null);
+          } catch (crearErr) {
+            console.error('Error creando orden pendiente:', crearErr);
+            setOrdenError('No se pudo crear el carrito');
+          }
+        } else {
+          console.error('Error al obtener la orden pendiente:', err.response || err.message);
+          setOrdenError('No se pudo cargar el carrito');
+        }
+      });
+  }, []);
+
+
+  const agregarMedicamento = async (med) => {
+    try {
+      const usuarioData = JSON.parse(localStorage.getItem('usuario'));
+      const token = localStorage.getItem('token');
+
+      if (!usuarioData?.id) {
+        setOrdenError('Usuario no autenticado');
+        return;
+      }
+
+      const body = {
+        idOrden: orden ? orden.idOrden : null,
+        idMedicamento: med.id,
+        cantidad: 1,
+        imagen: med.imagen || '',
+      };
+
+      await axios.post(`${API_URL}/api/orden/addMedicamento`, body, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'idUsuario': usuarioData.id
+        }
+      });
+
+      // Luego, hacer GET para obtener la orden actualizada
+      const resOrdenActualizada = await axios.get(`${API_URL}/api/orden/ordenPendiente/${usuarioData.id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      setOrden(resOrdenActualizada.data);
+      setOrdenError(null);
+
+    } catch (error) {
+      console.error('Error agregando medicamento:', error.response || error.message);
+      setOrdenError('No se pudo agregar el medicamento');
+    }
+  };
+
+  const calcularTotal = () => {
+    if (!orden || !orden.medicamentos) return 0;
+    return orden.medicamentos.reduce((total, med) => {
+      const precio = med.precioMedicamento || 0;
+      const cantidad = med.cantidad || 0;
+      return total + precio * cantidad;
+    }, 0);
+  };
+
+  const eliminarMedicamento = async (med) => {
+    try {
+      const token = localStorage.getItem('token');
+
+      const body = {
+        idOrden: orden.idOrden,
+        idMedicamento: med.idMedicamento,
+        cantidad: 1,  // asumo que quieres eliminar 1 unidad
+        imagen: med.imagen || '',
+        nombreMedicamento: med.nombreMedicamento,
+        precioMedicamento: med.precioMedicamento
+      };
+
+      await axios.delete(`${API_URL}/api/orden/deleteMedicamento`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        data: body // En DELETE con axios, el body va en `data`
+      });
+
+      // Luego, recargar la orden actualizada para sincronizar el estado
+      const usuarioData = JSON.parse(localStorage.getItem('usuario'));
+      const response = await axios.get(`${API_URL}/api/orden/ordenPendiente/${usuarioData.id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      setOrden(response.data);
+      setOrdenError(null);
+
+    } catch (error) {
+      console.error('Error eliminando medicamento:', error.response || error.message);
+      setOrdenError('No se pudo eliminar el medicamento');
+    }
+  };
+
 
   return (
-    <Container maxWidth="lg">
-      <Box sx={{ mt: 4, mb: 8 }}>
-        <Typography variant="h3" component="h1" gutterBottom align="center">
-          <span style={{ color: 'green' }}>¿</span>
-          TeFaltanPastillas
-          <span style={{ color: 'green' }}>?</span>
-        </Typography>
-        <Typography variant="h5" component="h2" gutterBottom align="center" color="text.secondary">
-          Sistema de Gestión de Medicamentos
-        </Typography>
-      </Box>
+    <div className="home-container">
+      <aside className="sidebar">
+        <h1 className="logo">TeFaltan <span className="highlight">Pastillas?</span></h1>
+        <nav>
+          <ul>
+            <li className="active">Inicio</li>
+            <li>Usuario</li>
+            <li>Historial</li>
+            <li>Configuración</li>
+          </ul>
+        </nav>
+        <div className="register-box">
+          <p>¿Eres Gerente de una Farmacia?</p>
+          <button onClick={handleRegistroClick}>Regístrate</button>
+        </div>
+      </aside>
 
-      <Grid container spacing={4} justifyContent="center">
-        <Grid item xs={12} md={6}>
-          <Card
-            sx={{
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              cursor: 'pointer',
-              '&:hover': {
-                transform: 'scale(1.02)',
-                transition: 'transform 0.2s ease-in-out',
-              },
-            }}
-            onClick={() => navigate('/medicamentos')}
-          >
-            <CardMedia
-              component="div"
-              sx={{
-                pt: '56.25%',
-                bgcolor: 'primary.light',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <MedicationOutlined
-                sx={{
-                  fontSize: 80,
-                  color: 'white',
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                }}
-              />
-            </CardMedia>
-            <CardContent sx={{ flexGrow: 1, textAlign: 'center' }}>
-              <Typography gutterBottom variant="h5" component="h2">
-                Gestión de Medicamentos
-              </Typography>
-              <Typography>
-                Administra el inventario de medicamentos, controla stock y realiza seguimiento.
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+      <main className="main-content">
+        <h2 className="section-title">Todos los Medicamentos</h2>
+        {error ? (
+          <p className="error">{error}</p>
+        ) : (
+          <div className="product-grid">
+            {medicamentos.map((med) => (
+              <div className="product-card" key={med.id}>
+                <img
+                  src="/images/6408427.png"
+                />
+                <p className="product-name">{med.nombre}</p>
+                <p className="product-price">${med.precio.toFixed(2)}</p>
+                <button className="add-btn" onClick={() => agregarMedicamento(med)}>
+                  +
+                </button>
 
-        <Grid item xs={12} md={6}>
-          <Card
-            sx={{
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              cursor: 'pointer',
-              '&:hover': {
-                transform: 'scale(1.02)',
-                transition: 'transform 0.2s ease-in-out',
-              },
-            }}
-            onClick={() => navigate('/usuarios')}
-          >
-            <CardMedia
-              component="div"
-              sx={{
-                pt: '56.25%',
-                bgcolor: 'secondary.light',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <PersonOutline
-                sx={{
-                  fontSize: 80,
-                  color: 'white',
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                }}
-              />
-            </CardMedia>
-            <CardContent sx={{ flexGrow: 1, textAlign: 'center' }}>
-              <Typography gutterBottom variant="h5" component="h2">
-                Gestión de Usuarios
-              </Typography>
-              <Typography>
-                Administra usuarios, roles y permisos del sistema.
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+              </div>
+            ))}
+          </div>
+        )}
 
-      <Box sx={{ mt: 4, textAlign: 'center' }}>
-        <Button
-          variant="outlined"
-          color="error"
-          onClick={() => {
-            localStorage.removeItem('token');
-            navigate('/');
-          }}
-        >
-          Cerrar Sesión
-        </Button>
-      </Box>
-    </Container>
+      </main>
+
+      <aside className="order-sidebar">
+        <div className="address-box">
+          <p className="section-title">Tu dirección</p>
+          <p>{direccion || 'No has configurado tu dirección'}</p>
+          <button className="small-btn">Cambiar</button>
+        </div>
+
+
+        <div className="cart-box">
+          <h2>Tu Carrito</h2>
+          {orden && orden.medicamentos && orden.medicamentos.length > 0 ? (
+            <ul>
+              <ul>
+                {orden.medicamentos.map(med => (
+                  <li key={med.idMedicamento}>
+                    {med.nombreMedicamento} x {med.cantidad} - ${med.precioMedicamento.toFixed(2)}
+                    <button onClick={() => eliminarMedicamento(med)} className="remove-btn">-</button>
+                  </li>
+                ))}
+              </ul>
+            </ul>
+          ) : (
+            <p>No tienes medicamentos en tu orden pendiente.</p>
+          )}
+          <div className="total">
+            <p>Total</p>
+            <p>${calcularTotal().toFixed(2)}</p>
+          </div>
+          <button className="buy-btn">Comprar</button>
+          {ordenError && <p className="error">{ordenError}</p>}
+        </div>
+      </aside>
+    </div>
   );
-} 
+};
+
+export default Home;
