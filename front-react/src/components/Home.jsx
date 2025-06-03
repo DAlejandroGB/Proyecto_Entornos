@@ -154,7 +154,7 @@ const Home = () => {
     return orden.medicamentos.reduce((total, med) => {
       const precio = med.precioMedicamento || 0;
       const cantidad = med.cantidad || 0;
-      return total + precio * cantidad;
+      return total + precio;
     }, 0);
   };
 
@@ -220,19 +220,22 @@ const Home = () => {
           <p className="error">{error}</p>
         ) : (
           <div className="product-grid">
-            {medicamentos.map((med) => (
-              <div className="product-card" key={med.id}>
-                <img
-                  src="/images/6408427.png"
-                />
-                <p className="product-name">{med.nombre}</p>
-                <p className="product-price">${med.precio.toFixed(2)}</p>
-                <button className="add-btn" onClick={() => agregarMedicamento(med)}>
-                  +
-                </button>
+            {medicamentos.map((med) => {
+              return (
+                <div className="product-card" key={med.id}>
 
-              </div>
-            ))}
+                  <img
+                    src={med.imagenMed}
+                  />
+                  <p className="product-name">{med.nombre}</p>
+                  <p className="product-price">${med.precio.toFixed(2)}</p>
+                  <button className="add-btn" onClick={() => agregarMedicamento(med)}>
+                    +
+                  </button>
+
+                </div>
+              );
+            })}
           </div>
         )}
 

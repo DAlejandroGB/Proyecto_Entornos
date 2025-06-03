@@ -540,6 +540,13 @@ body {
 
 .product-card {
   animation: fadeInUp 0.6s ease forwards;
+  
+}
+
+.product-card img {
+  width: 150px;   /* o el tamaño que necesites */
+  height: auto;
+  object-fit: contain; /* para mantener proporción */
 }
 
 .product-card:nth-child(1) { animation-delay: 0.1s; }
