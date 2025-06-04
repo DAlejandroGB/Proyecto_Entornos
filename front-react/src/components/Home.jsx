@@ -19,7 +19,10 @@ const Home = () => {
   const [imagenBase64, setImagenBase64] = useState('');
   const [medicamentoPendiente, setMedicamentoPendiente] = useState(null);
   const [mostrarModalImagen, setMostrarModalImagen] = useState(false);
-
+  const [medicamentosValidados, setMedicamentosValidados] = useState(() => {
+    const saved = localStorage.getItem('medicamentosValidados');
+    return saved ? JSON.parse(saved) : [];
+  });
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
@@ -46,8 +49,6 @@ const Home = () => {
         console.error('Error al obtener datos del usuario:', err);
       });
   }, []);
-
-
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -114,17 +115,19 @@ const Home = () => {
       });
   }, []);
 
-
   const agregarMedicamento = (med) => {
     if (!med.ventaLibre) {
-      // Si no es venta libre, abrir modal para pedir imagen
-      setMedicamentoPendiente(med);
-      setMostrarModalImagen(true);
+      if (medicamentosValidados.includes(med.id)) {
+        agregarMedicamentoConImagen(med, '');
+      } else {
+        setMedicamentoPendiente(med);
+        setMostrarModalImagen(true);
+      }
     } else {
-      // Si es venta libre, agregar directo
       agregarMedicamentoConImagen(med, '');
     }
   };
+
   const agregarMedicamentoConImagen = async (med, imagen) => {
     const usuarioData = JSON.parse(localStorage.getItem('userData'));
     const token = localStorage.getItem('token');
@@ -138,15 +141,6 @@ const Home = () => {
       imagen: base64Image,
     };
 
-    console.log('Intentando agregar medicamento con imagen:', {
-      idOrden: orden ? orden.idOrden : null,
-      idMedicamento: med.id,
-      cantidad: 1,
-      imagen: imagen,
-      token,
-      idUsuario: usuarioData.idUsuario
-    });
-
     try {
       await axios.post(`${API_URL}/api/orden/addMedicamento`, body, {
         headers: {
@@ -154,7 +148,13 @@ const Home = () => {
           idUsuario: usuarioData.idUsuario,
         }
       });
-      // Actualizar orden
+
+      if (imagen && !medicamentosValidados.includes(med.id)) {
+        const nuevosValidados = [...medicamentosValidados, med.id];
+        setMedicamentosValidados(nuevosValidados);
+        localStorage.setItem('medicamentosValidados', JSON.stringify(nuevosValidados));
+      }
+
       const resOrdenActualizada = await axios.get(`${API_URL}/api/orden/ordenPendiente/${usuarioData.idUsuario}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -172,7 +172,6 @@ const Home = () => {
     setImagenBase64('');
   };
 
-  // Función para convertir archivo a base64
   const onFileChange = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -185,10 +184,36 @@ const Home = () => {
   const calcularTotal = () => {
     if (!orden || !orden.medicamentos) return 0;
     return orden.medicamentos.reduce((total, med) => {
-      const precio = med.precioMedicamento || 0;
-      const cantidad = med.cantidad || 0;
-      return total + precio;
+      const precioTotal = med.precioMedicamento;
+      return total + precioTotal;
     }, 0);
+  };
+
+  const procesarCompra = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      
+      await axios.put(
+        `${API_URL}/api/orden?idOrden=${orden.idOrden}&estado=PROCESANDO`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setOrden(null);
+      setOrdenError(null);
+
+      alert('¡Orden procesada con éxito! Puedes ver el estado en el historial.');
+      
+      navigate('/historial');
+
+    } catch (error) {
+      console.error('Error processing order:', error);
+      setOrdenError('Error al procesar la orden');
+    }
   };
 
   const eliminarMedicamento = async (med) => {
@@ -211,7 +236,6 @@ const Home = () => {
         data: body // En DELETE con axios, el body va en `data`
       });
 
-      // Luego, recargar la orden actualizada para sincronizar el estado
       const usuarioData = JSON.parse(localStorage.getItem('userData'));
       const response = await axios.get(`${API_URL}/api/orden/ordenPendiente/${usuarioData.idUsuario}`, {
         headers: {
@@ -228,6 +252,12 @@ const Home = () => {
     }
   };
 
+  useEffect(() => {
+    if (!orden) {
+      setMedicamentosValidados([]);
+      localStorage.removeItem('medicamentosValidados');
+    }
+  }, [orden]);
 
   return (
     <div className="home-container">
@@ -264,7 +294,6 @@ const Home = () => {
             {medicamentos.map((med) => {
               return (
                 <div className="product-card" key={med.id}>
-
                   <img
                     src={med.imagenMed}
                   />
@@ -273,13 +302,11 @@ const Home = () => {
                   <button className="add-btn" onClick={() => agregarMedicamento(med)}>
                     +
                   </button>
-
                 </div>
               );
             })}
           </div>
         )}
-
       </main>
 
       <aside className="order-sidebar">
@@ -289,34 +316,38 @@ const Home = () => {
           <button className='small-btn' onClick={() => navigate('/Perfil')}>Cambiar</button>
         </div>
 
-
         <div className="cart-box">
           <h2>Tu Carrito</h2>
           {orden && orden.medicamentos && orden.medicamentos.length > 0 ? (
-            <ul>
+            <>
               <ul>
                 {orden.medicamentos.map(med => {
+                  const precioTotal = med.precioMedicamento;
                   return (
                     <li key={med.idMedicamento}>
-                      {med.nombreMedicamento} x {med.cantidad} - ${med.precioMedicamento.toFixed(2)}
+                      {med.nombreMedicamento} x {med.cantidad} - ${precioTotal.toFixed(2)}
                       <button onClick={() => eliminarMedicamento(med)} className="remove-btn">-</button>
                     </li>
                   );
                 })}
-
               </ul>
-            </ul>
+              <div className="total">
+                <p>Total</p>
+                <p>${calcularTotal().toFixed(2)}</p>
+              </div>
+              <button 
+                className="buy-btn"
+                onClick={procesarCompra}
+                disabled={!orden || !orden.medicamentos || orden.medicamentos.length === 0}
+              >
+                Comprar
+              </button>
+            </>
           ) : (
             <p>No tienes medicamentos en tu orden pendiente.</p>
           )}
-          <div className="total">
-            <p>Total</p>
-            <p>${calcularTotal().toFixed(2)}</p>
-          </div>
-          <button className="buy-btn">Comprar</button>
           {ordenError && <p className="error">{ordenError}</p>}
         </div>
-        
       </aside>
       {mostrarModalImagen && (
         <div className="modal">

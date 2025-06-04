@@ -5,6 +5,7 @@ import Register from './components/Register';
 import Home from './components/Home';
 import Perfil from './components/Perfil';
 import Manager from './components/Manager';
+import History from './components/History';
 
 const theme = createTheme({
   palette: {
@@ -59,6 +60,14 @@ export default function App() {
             element={
               <PrivateRoute>
                 <Manager />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/historial"
+            element={
+              <PrivateRoute>
+                <History />
               </PrivateRoute>
             }
           />

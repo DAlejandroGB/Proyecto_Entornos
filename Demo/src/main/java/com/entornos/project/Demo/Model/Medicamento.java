@@ -20,11 +20,13 @@ public class Medicamento {
     private String imagen;
     @Column(name = "venta_libre")
     private Boolean ventaLibre;
+    private Boolean activo;
 
     public Medicamento(CrearMedicamentoDTO crearMedicamentoDTO) {
         this.nombre = crearMedicamentoDTO.getNombre();
         this.precio = crearMedicamentoDTO.getPrecio();
         this.imagen = crearMedicamentoDTO.getImagenMed();
         this.ventaLibre = crearMedicamentoDTO.getVentaLibre();
+        this.activo = true;
     }
 }
