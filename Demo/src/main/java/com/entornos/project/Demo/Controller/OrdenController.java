@@ -11,9 +11,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("api/orden")
@@ -32,7 +32,7 @@ public class OrdenController {
 
     @Operation(summary = "Agregar medicamento a una orden")
     @PostMapping("/addMedicamento")
-    public ResponseEntity<OrdenMedicamentoDTO> addMedicamento(@RequestBody OrdenMedicamentoDTO ordenMedicamentoDTO, @RequestHeader(name = "idUsuario") Long idUsuario) throws IOException {
+    public ResponseEntity<OrdenMedicamentoDTO> addMedicamento(@RequestBody() OrdenMedicamentoDTO ordenMedicamentoDTO, @RequestHeader(name = "idUsuario") Long idUsuario) {
         OrdenMedicamentoDTO ordenMedDTO = this.ordenService.addMedicamento(ordenMedicamentoDTO, idUsuario);
         return ResponseEntity.ok(ordenMedDTO);
     }
@@ -55,8 +55,8 @@ public class OrdenController {
 
     @Operation(summary = "Listar ordenes por estado")
     @GetMapping("/{estado}")
-    public ResponseEntity<Page<Orden>> getAllOrdenesByEstado(@PathVariable("estado") String estado, Pageable pageable) {
-        Page<Orden> ordenes = this.ordenService.getAllOrdenesByEstado(estado, pageable);
+    public ResponseEntity<Page<OrdenDTO>> getAllOrdenesByEstado(@PathVariable("estado") String estado, Pageable pageable) {
+        Page<OrdenDTO> ordenes = this.ordenService.getAllOrdenesByEstado(estado, pageable);
         if (ordenes.isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
         return new ResponseEntity<>(ordenes, HttpStatus.OK);
     }
@@ -74,7 +74,10 @@ public class OrdenController {
         return new ResponseEntity<>(ordenUpdated, HttpStatus.OK);
     }
 
-
+    @PostMapping("/reciboPago")
+    public ResponseEntity<OrdenDTO> cargarReciboPago(@RequestParam Long idOrden, @RequestPart(value = "reciboPago") MultipartFile reciboPago) throws IOException {
+        return new ResponseEntity<>(this.ordenService.cargarReciboPago(idOrden, reciboPago), HttpStatus.OK);
+    }
 
     @Autowired
     public void setOrdenService(IOrdenService ordenService) {

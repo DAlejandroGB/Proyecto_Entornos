@@ -320,7 +320,7 @@ const Home = () => {
       </aside>
       {mostrarModalImagen && (
         <div className="modal">
-          <h3>Sube una imagen para este medicamento</h3>
+          <h3>Este medicamento no es de venta libre, por favor cargue la orden médica</h3>
           <input type="file" accept="image/*" onChange={onFileChange} />
           <button
             disabled={!imagenBase64}
