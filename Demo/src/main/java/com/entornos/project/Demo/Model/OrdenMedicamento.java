@@ -25,7 +25,6 @@ public class OrdenMedicamento {
 
     private Integer cantidad;
 
-    @Lob
     @Column(name = "imagen")
     private String imagen;
 
