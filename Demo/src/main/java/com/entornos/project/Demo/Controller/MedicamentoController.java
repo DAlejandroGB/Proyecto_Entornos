@@ -36,7 +36,8 @@ public class MedicamentoController {
 
     @Operation(summary = "Actualizar medicamento")
     @PutMapping("/{id}")
-    public ResponseEntity<MedicamentoDTO> actualizar(@RequestBody MedicamentoDTO medicamentoDTO) {
+    public ResponseEntity<MedicamentoDTO> actualizar(@RequestBody MedicamentoDTO medicamentoDTO, @PathVariable Long id) {
+        medicamentoDTO.setId(id);
         return new ResponseEntity<>(medicamentoService.actualizar(medicamentoDTO), HttpStatus.OK);
     }
 
