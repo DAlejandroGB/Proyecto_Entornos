@@ -5,11 +5,12 @@ import com.entornos.project.Demo.DTO.OrdenMedicamentoDTO;
 import com.entornos.project.Demo.Model.Orden;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 public interface IOrdenService {
-    OrdenMedicamentoDTO addMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, Long idUsuario) throws IOException;
+    OrdenMedicamentoDTO addMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, Long idUsuario, MultipartFile ordenMedica) throws IOException;
 
     void deleteMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO);
 
@@ -22,4 +23,6 @@ public interface IOrdenService {
     Page<Orden> getAllOrdenesByEstado(String estado, Pageable pageable);
 
     Orden updateEstadoOrden(Long idOrden, String estado);
+
+    OrdenDTO cargarReciboPago(Long idOrden, MultipartFile reciboPago) throws IOException;
 }

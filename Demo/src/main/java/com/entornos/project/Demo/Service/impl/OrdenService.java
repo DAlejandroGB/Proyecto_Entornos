@@ -11,9 +11,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +50,7 @@ public class OrdenService implements IOrdenService {
 
     @Override
     @Transactional
-    public OrdenMedicamentoDTO addMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, Long idUsuario) throws IOException {
+    public OrdenMedicamentoDTO addMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, Long idUsuario, MultipartFile ordenMedica) throws IOException {
 
         OrdenDTO ordenDTO = this.createOrden(idUsuario);
         Medicamento medicamento = this.verificarMedicamento(ordenMedicamentoDTO.getIdMedicamento());
@@ -60,21 +62,21 @@ public class OrdenService implements IOrdenService {
             return new OrdenMedicamentoDTO(ordenMedicamentoRepository.save(ordenMedicamentoDB));
         }
 
-        OrdenMedicamento ordenMedicamento = getOrdenMedicamento(ordenMedicamentoDTO, ordenDTO, medicamento);
+        OrdenMedicamento ordenMedicamento = getOrdenMedicamento(ordenMedicamentoDTO, ordenDTO, medicamento, ordenMedica);
         ordenMedicamentoRepository.findById(ordenMedicamentoRepository.save(ordenMedicamento).getId()).orElseThrow();
 
         return new OrdenMedicamentoDTO(ordenMedicamento);
     }
 
     @Transactional
-    public OrdenMedicamento getOrdenMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, OrdenDTO ordenDTO, Medicamento medicamento) {
+    public OrdenMedicamento getOrdenMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, OrdenDTO ordenDTO, Medicamento medicamento, MultipartFile ordenMedica) throws IOException {
         OrdenMedicamento ordenMedicamento = new OrdenMedicamento();
         ordenMedicamento.setIdOrden(ordenDTO.getIdOrden());
         ordenMedicamento.setIdMedicamento(ordenMedicamentoDTO.getIdMedicamento());
         ordenMedicamento.setCantidad(ordenMedicamentoDTO.getCantidad());
         if(!medicamento.getVentaLibre()){
-            if(ordenMedicamentoDTO.getImagen() == null || ordenMedicamentoDTO.getImagen().isEmpty()) throw new RuntimeException("Su medicamento no es de venta libre, por favor cargue la orden médica.");
-            ordenMedicamento.setImagen(ordenMedicamentoDTO.getImagen());
+            if(ordenMedica == null) throw new RuntimeException("Su medicamento no es de venta libre, por favor cargue la orden médica.");
+            ordenMedicamento.setImagen(Base64.getEncoder().encodeToString(ordenMedica.getBytes()));
         }
         return ordenMedicamento;
     }
@@ -170,6 +172,20 @@ public class OrdenService implements IOrdenService {
         ordenUpdated.setIdEstado(estadoDB.getId());
         ordenUpdated.setFechaModificacion(LocalDate.now());
         return this.ordenRepository.save(ordenUpdated);
+    }
+
+    @Override
+    public OrdenDTO cargarReciboPago(Long idOrden, MultipartFile reciboPago) throws IOException {
+        Orden orden = this.ordenRepository.findById(idOrden).orElse(null);
+        if (orden == null) throw new RuntimeException("No se encontro la orden");
+
+        orden.setReciboPago(Base64.getEncoder().encodeToString(reciboPago.getBytes()));
+        orden.setFechaModificacion(LocalDate.now());
+        this.ordenRepository.save(orden);
+
+        OrdenDTO ordenDTO = new OrdenDTO(orden);
+        ordenDTO.setMedicamentos(this.ordenMedicamentoRepository.findAllByIdOrden(idOrden).stream().peek(med -> med.setPrecioMedicamento(med.getPrecioMedicamento()*med.getCantidad())).toList());
+        return ordenDTO;
     }
 
     @Autowired
