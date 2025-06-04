@@ -16,7 +16,7 @@ public class MedicamentoService implements IMedicamentoService {
     private final MedicamentoRepository repository;
 
     public List<MedicamentoDTO> listar() {
-        return repository.findAll()
+        return repository.findAllMedicamentosActivos()
                 .stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
@@ -44,7 +44,8 @@ public class MedicamentoService implements IMedicamentoService {
     public MedicamentoDTO eliminar(Long id) {
         Medicamento medicamento = repository.findById(id).orElse(null);
         if (medicamento == null) throw new RuntimeException("Medicamento no encontrado");
-        repository.deleteById(id);
+        medicamento.setActivo(false);
+        repository.save(medicamento);
         return toDTO(medicamento);
     }
 

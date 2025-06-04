@@ -1,5 +1,6 @@
 package com.entornos.project.Demo.Service.impl;
 
+import com.entornos.project.Demo.DTO.ItemMedicamentoDTO;
 import com.entornos.project.Demo.Model.*;
 import com.entornos.project.Demo.Repository.*;
 import com.entornos.project.Demo.Service.interfaces.IOrdenService;
@@ -120,7 +121,7 @@ public class OrdenService implements IOrdenService {
         Orden orden = ordenes.getFirst();
         OrdenDTO ordenDTO = new OrdenDTO(orden);
         //Se consultan los medicamentos asociados a esa orden
-        ordenDTO.setMedicamentos(this.ordenMedicamentoRepository.findAllByIdOrden(orden.getId()).stream().peek(med -> med.setPrecioMedicamento(med.getPrecioMedicamento()*med.getCantidad())).toList());
+        ordenDTO.setMedicamentos(this.ordenMedicamentoRepository.findAllByIdOrden(orden.getId()).stream().peek(med -> med.setPrecioMedicamento(med.getPrecioMedicamento()*med.getCantidad())).filter(ItemMedicamentoDTO::getActivo).toList());
         return ordenDTO;
     }
 
