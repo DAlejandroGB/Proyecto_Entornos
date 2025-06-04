@@ -27,5 +27,6 @@ public class Medicamento {
         this.precio = crearMedicamentoDTO.getPrecio();
         this.imagen = crearMedicamentoDTO.getImagenMed();
         this.ventaLibre = crearMedicamentoDTO.getVentaLibre();
+        this.activo = true;
     }
 }
