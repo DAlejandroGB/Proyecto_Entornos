@@ -6,6 +6,7 @@ import Home from './components/Home';
 import Perfil from './components/Perfil';
 import Manager from './components/Manager';
 import History from './components/History';
+import Orders from './components/Orders';
 
 const theme = createTheme({
   palette: {
@@ -68,6 +69,14 @@ export default function App() {
             element={
               <PrivateRoute>
                 <History />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/ordenes"
+            element={
+              <PrivateRoute>
+                <Orders />
               </PrivateRoute>
             }
           />

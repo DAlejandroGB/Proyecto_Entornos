@@ -75,7 +75,7 @@ const Perfil = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate('/login');
+    navigate('/');
   };
 
   const handleRegistroClick = () => {
@@ -95,10 +95,10 @@ const Perfil = () => {
             <li onClick={() => navigate(rol === 'GERENTE' ? '/ordenes' : '/historial')}>{rol === 'GERENTE' ? 'Ordenes' : 'Historial'}</li>
           </ul>
         </nav>
-        <div className="register-box">
+        {rol !== 'GERENTE' && (<div className="register-box">
           <p>¿Eres Gerente de una Farmacia?</p>
           <button onClick={handleRegistroClick}>Regístrate</button>
-        </div>
+        </div>)}
         <div className="logout-box">
           <button onClick={handleLogout}>Cerrar sesión</button>
         </div>

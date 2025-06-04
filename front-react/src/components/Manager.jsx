@@ -11,9 +11,14 @@ const Manager = () => {
     const [medicamentos, setMedicamentos] = useState([]);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const [modalVisible, setModalVisible] = useState(false);
+    const [medEdit, setMedEdit] = useState(null);
+    const [nombre, setNombre] = useState('');
+    const [precio, setPrecio] = useState('');
+    const [imagenMed, setImagenMed] = useState('');
+    const [ventaLibre, setVentaLibre] = useState(false);
 
 
-    // Simulando obtención de datos para Manager
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('userData'));
         const idUsuario = userData?.idUsuario;
@@ -31,7 +36,6 @@ const Manager = () => {
         })
             .then(res => {
                 localStorage.setItem('usuarioCompleto', JSON.stringify(res.data));
-                setDireccion(res.data.direccion);
                 setUsuario(res.data);  // <-- Agrega esta línea para actualizar el estado usuario
                 console.log('Usuario completo:', res.data);
             })
@@ -61,6 +65,89 @@ const Manager = () => {
             });
     }, []);
 
+    const deleteMedicamento = (med) => {
+        const confirmado = window.confirm(`¿Estás seguro que quieres eliminar el medicamento "${med.nombre}"?`);
+        if (!confirmado) return;
+
+        const token = localStorage.getItem('token');
+
+        axios.delete(`${API_URL}/api/medicamentos/${med.id}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+            .then(() => {
+                // Actualizar la lista después de eliminar
+                setMedicamentos(prevMedicamentos => prevMedicamentos.filter(m => m.id !== med.id));
+                alert('Medicamento eliminado correctamente.');
+            })
+            .catch(err => {
+                console.error('Error al eliminar medicamento:', err);
+                alert('Hubo un error al eliminar el medicamento.');
+            });
+    };
+
+    const openModal = (med) => {
+        setMedEdit(med); // med es null para agregar
+        setModalVisible(true);
+    };
+
+    const closeModal = () => {
+        setModalVisible(false);
+        setMedEdit(null);
+    };
+
+    useEffect(() => {
+        if (medEdit) {
+            setNombre(medEdit.nombre || '');
+            setPrecio(medEdit.precio || '');
+            setImagenMed(medEdit.imagenMed || '');
+            setVentaLibre(medEdit.ventaLibre || false);
+        } else {
+            setNombre('');
+            setPrecio('');
+            setImagenMed('');
+            setVentaLibre(false);
+        }
+    }, [medEdit]);
+
+    const saveMedicamento = () => {
+        const token = localStorage.getItem('token');
+        const data = {
+            nombre,
+            precio: parseFloat(precio),
+            imagenMed,
+            ventaLibre,
+        };
+
+        if (medEdit) {
+            // PUT para actualizar
+            axios.put(`${API_URL}/api/medicamentos/${medEdit.id}`, data, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+                .then(res => {
+                    // Actualizar localmente la lista
+                    setMedicamentos(meds => meds.map(m => m.id === medEdit.id ? res.data : m));
+                    closeModal();
+                })
+                .catch(err => {
+                    alert('Error actualizando medicamento');
+                    console.error(err);
+                });
+        } else {
+            // POST para crear nuevo
+            axios.post(`${API_URL}/api/medicamentos`, data, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+                .then(res => {
+                    setMedicamentos(meds => [...meds, res.data]);
+                    closeModal();
+                })
+                .catch(err => {
+                    alert('Error agregando medicamento');
+                    console.error(err);
+                });
+        }
+    };
+
     return (
         <div className="home-container">
             <aside className="sidebar">
@@ -77,8 +164,8 @@ const Manager = () => {
                     style={{
                         position: 'absolute',
                         bottom: '1rem',
-                        left: 0,
-                        width: '100%',
+                        left: '10%',
+                        width: '80%',
                         textAlign: 'center'
                     }}
                 >
@@ -108,7 +195,7 @@ const Manager = () => {
                                     <p className="product-name">{med.nombre}</p>
                                     <p className="product-price">${med.precio.toFixed(2)}</p>
 
-                                    <button className="btn-edit" onClick={() => editMedicamento(med)}>
+                                    <button className="btn-edit" onClick={() => openModal(med)}>
                                         ✏️
                                     </button>
                                     <button className="btn-delete" onClick={() => deleteMedicamento(med)}>
@@ -118,9 +205,47 @@ const Manager = () => {
                                 </div>
                             );
                         })}
+                        <div className="product-card add-new" onClick={() => openModal(null)}>
+                            +
+                        </div>
+                    </div>
+
+                )}
+                {/* Modal */}
+                {modalVisible && (
+                    <div className="modal-backdrop" onClick={closeModal}>
+                        <div className="modal-content" onClick={e => e.stopPropagation()}>
+                            {/* Agrego un botón de cerrar con la clase para estilos */}
+                            <button className="modal-close-btn" onClick={closeModal} aria-label="Cerrar modal">&times;</button>
+
+                            <h2 className="modal-header">{medEdit ? 'Editar Medicamento' : 'Agregar Medicamento'}</h2>
+
+                            <div className="modal-body">
+                                <label>
+                                    Nombre:
+                                    <input type="text" value={nombre} onChange={e => setNombre(e.target.value)} />
+                                </label>
+                                <label>
+                                    Precio:
+                                    <input type="number" value={precio} onChange={e => setPrecio(e.target.value)} />
+                                </label>
+                                <label>
+                                    URL Imagen:
+                                    <input type="text" value={imagenMed} onChange={e => setImagenMed(e.target.value)} />
+                                </label>
+                                <label>
+                                    Venta Libre:
+                                    <input type="checkbox" checked={ventaLibre} onChange={e => setVentaLibre(e.target.checked)} />
+                                </label>
+                            </div>
+
+                            <div className="modal-actions">
+                                <button className="btn-primary" onClick={saveMedicamento}>Guardar</button>
+                                <button className="btn-secondary" onClick={closeModal}>Cancelar</button>
+                            </div>
+                        </div>
                     </div>
                 )}
-
             </main>
 
         </div>
