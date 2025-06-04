@@ -32,8 +32,8 @@ public class OrdenController {
 
     @Operation(summary = "Agregar medicamento a una orden")
     @PostMapping("/addMedicamento")
-    public ResponseEntity<OrdenMedicamentoDTO> addMedicamento(@RequestPart("ordenMedicamentoDTO") OrdenMedicamentoDTO ordenMedicamentoDTO, @RequestHeader(name = "idUsuario") Long idUsuario, @RequestPart(value = "ordenMedica",  required = false) MultipartFile ordenMedica) throws IOException {
-        OrdenMedicamentoDTO ordenMedDTO = this.ordenService.addMedicamento(ordenMedicamentoDTO, idUsuario, ordenMedica);
+    public ResponseEntity<OrdenMedicamentoDTO> addMedicamento(@RequestBody() OrdenMedicamentoDTO ordenMedicamentoDTO, @RequestHeader(name = "idUsuario") Long idUsuario) {
+        OrdenMedicamentoDTO ordenMedDTO = this.ordenService.addMedicamento(ordenMedicamentoDTO, idUsuario);
         return ResponseEntity.ok(ordenMedDTO);
     }
 

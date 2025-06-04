@@ -50,7 +50,7 @@ public class OrdenService implements IOrdenService {
 
     @Override
     @Transactional
-    public OrdenMedicamentoDTO addMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, Long idUsuario, MultipartFile ordenMedica) throws IOException {
+    public OrdenMedicamentoDTO addMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, Long idUsuario) {
 
         OrdenDTO ordenDTO = this.createOrden(idUsuario);
         Medicamento medicamento = this.verificarMedicamento(ordenMedicamentoDTO.getIdMedicamento());
@@ -62,21 +62,21 @@ public class OrdenService implements IOrdenService {
             return new OrdenMedicamentoDTO(ordenMedicamentoRepository.save(ordenMedicamentoDB));
         }
 
-        OrdenMedicamento ordenMedicamento = getOrdenMedicamento(ordenMedicamentoDTO, ordenDTO, medicamento, ordenMedica);
+        OrdenMedicamento ordenMedicamento = getOrdenMedicamento(ordenMedicamentoDTO, ordenDTO, medicamento);
         ordenMedicamentoRepository.findById(ordenMedicamentoRepository.save(ordenMedicamento).getId()).orElseThrow();
 
         return new OrdenMedicamentoDTO(ordenMedicamento);
     }
 
     @Transactional
-    public OrdenMedicamento getOrdenMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, OrdenDTO ordenDTO, Medicamento medicamento, MultipartFile ordenMedica) throws IOException {
+    public OrdenMedicamento getOrdenMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, OrdenDTO ordenDTO, Medicamento medicamento) {
         OrdenMedicamento ordenMedicamento = new OrdenMedicamento();
         ordenMedicamento.setIdOrden(ordenDTO.getIdOrden());
         ordenMedicamento.setIdMedicamento(ordenMedicamentoDTO.getIdMedicamento());
         ordenMedicamento.setCantidad(ordenMedicamentoDTO.getCantidad());
         if(!medicamento.getVentaLibre()){
-            if(ordenMedica == null) throw new RuntimeException("Su medicamento no es de venta libre, por favor cargue la orden médica.");
-            ordenMedicamento.setImagen(Base64.getEncoder().encodeToString(ordenMedica.getBytes()));
+            if(ordenMedicamentoDTO.getImagen() == null || ordenMedicamentoDTO.getImagen().isEmpty()) throw new RuntimeException("Su medicamento no es de venta libre, por favor cargue la orden médica.");
+            ordenMedicamento.setImagen(ordenMedicamentoDTO.getImagen());
         }
         return ordenMedicamento;
     }

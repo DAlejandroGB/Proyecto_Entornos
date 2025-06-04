@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface IOrdenService {
-    OrdenMedicamentoDTO addMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, Long idUsuario, MultipartFile ordenMedica) throws IOException;
+    OrdenMedicamentoDTO addMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO, Long idUsuario);
 
     void deleteMedicamento(OrdenMedicamentoDTO ordenMedicamentoDTO);
 
