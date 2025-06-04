@@ -16,6 +16,10 @@ const Home = () => {
     navigate('/Register'); // Ajusta la ruta según tu estructura
   };
   const [direccion, setDireccion] = useState('');
+  const [imagenBase64, setImagenBase64] = useState('');
+  const [medicamentoPendiente, setMedicamentoPendiente] = useState(null);
+  const [mostrarModalImagen, setMostrarModalImagen] = useState(false);
+
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('userData'));
@@ -111,45 +115,71 @@ const Home = () => {
   }, []);
 
 
+  const agregarMedicamento = (med) => {
+    if (!med.ventaLibre) {
+      // Si no es venta libre, abrir modal para pedir imagen
+      setMedicamentoPendiente(med);
+      setMostrarModalImagen(true);
+    } else {
+      // Si es venta libre, agregar directo
+      agregarMedicamentoConImagen(med, '');
+    }
+  };
+  const agregarMedicamentoConImagen = async (med, imagen) => {
+    const usuarioData = JSON.parse(localStorage.getItem('userData'));
+    const token = localStorage.getItem('token');
 
-  const agregarMedicamento = async (med) => {
+    const base64Image = imagen ? imagen.split(",")[1] : '';
+
+    const body = {
+      idOrden: orden ? orden.idOrden : null,
+      idMedicamento: med.id,
+      cantidad: 1,
+      imagen: base64Image,
+    };
+
+    console.log('Intentando agregar medicamento con imagen:', {
+      idOrden: orden ? orden.idOrden : null,
+      idMedicamento: med.id,
+      cantidad: 1,
+      imagen: imagen,
+      token,
+      idUsuario: usuarioData.idUsuario
+    });
+
     try {
-      const usuarioData = JSON.parse(localStorage.getItem('userData'));
-      const token = localStorage.getItem('token');
-
-      if (!usuarioData?.idUsuario) {
-        setOrdenError('Usuario no autenticado');
-        return;
-      }
-
-      const body = {
-        idOrden: orden ? orden.idOrden : null,
-        idMedicamento: med.id,
-        cantidad: 1,
-        imagen: med.imagenMed || '',
-      };
-
       await axios.post(`${API_URL}/api/orden/addMedicamento`, body, {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'idUsuario': usuarioData.idUsuario
+          Authorization: `Bearer ${token}`,
+          idUsuario: usuarioData.idUsuario,
         }
       });
-
-      // Luego, hacer GET para obtener la orden actualizada
+      // Actualizar orden
       const resOrdenActualizada = await axios.get(`${API_URL}/api/orden/ordenPendiente/${usuarioData.idUsuario}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         }
       });
-
       setOrden(resOrdenActualizada.data);
       setOrdenError(null);
-
     } catch (error) {
       console.error('Error agregando medicamento:', error.response || error.message);
       setOrdenError('No se pudo agregar el medicamento');
     }
+
+    setMostrarModalImagen(false);
+    setMedicamentoPendiente(null);
+    setImagenBase64('');
+  };
+
+  // Función para convertir archivo a base64
+  const onFileChange = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setImagenBase64(reader.result);
+    };
   };
 
   const calcularTotal = () => {
@@ -265,12 +295,15 @@ const Home = () => {
           {orden && orden.medicamentos && orden.medicamentos.length > 0 ? (
             <ul>
               <ul>
-                {orden.medicamentos.map(med => (
-                  <li key={med.idMedicamento}>
-                    {med.nombreMedicamento} x {med.cantidad} - ${med.precioMedicamento.toFixed(2)}
-                    <button onClick={() => eliminarMedicamento(med)} className="remove-btn">-</button>
-                  </li>
-                ))}
+                {orden.medicamentos.map(med => {
+                  return (
+                    <li key={med.idMedicamento}>
+                      {med.nombreMedicamento} x {med.cantidad} - ${med.precioMedicamento.toFixed(2)}
+                      <button onClick={() => eliminarMedicamento(med)} className="remove-btn">-</button>
+                    </li>
+                  );
+                })}
+
               </ul>
             </ul>
           ) : (
@@ -283,7 +316,21 @@ const Home = () => {
           <button className="buy-btn">Comprar</button>
           {ordenError && <p className="error">{ordenError}</p>}
         </div>
+        
       </aside>
+      {mostrarModalImagen && (
+        <div className="modal">
+          <h3>Sube una imagen para este medicamento</h3>
+          <input type="file" accept="image/*" onChange={onFileChange} />
+          <button
+            disabled={!imagenBase64}
+            onClick={() => agregarMedicamentoConImagen(medicamentoPendiente, imagenBase64)}
+          >
+            Enviar
+          </button>
+          <button onClick={() => setMostrarModalImagen(false)}>Cancelar</button>
+        </div>
+      )}
     </div>
   );
 };
