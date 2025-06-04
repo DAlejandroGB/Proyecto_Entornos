@@ -1,0 +1,246 @@
+/* Reseteo básico */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: #f5f8fd;
+    color: #333;
+}
+
+/* Dashboard */
+.dashboard {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: white;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #ddd;
+}
+
+.sidebar h2 {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    line-height: 1.2;
+}
+
+.sidebar h2 span {
+    color: #ff9900;
+}
+
+.sidebar nav a {
+    margin: 1rem 0;
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+}
+
+.sidebar nav a.active {
+    color: #007bff;
+}
+
+.gerente-box {
+    margin-top: auto;
+    background: #eef5ff;
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.gerente-box button {
+    margin-top: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Main */
+.main {
+    padding: 2rem;
+}
+
+/* Top bar */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-bar input {
+    padding: 0.5rem 1rem;
+    width: 300px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+/* Sección de usuarios */
+.medicamentos-section {
+    display: flex;
+    gap: 2rem;
+    padding: 1rem;
+}
+
+/* Formulario */
+.form-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.form-container h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-container input,
+.form-container select {
+    width: 100%;
+    padding: 0.8rem;
+    margin: 0.8rem 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.form-container button {
+    width: 100%;
+    padding: 0.8rem;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#cancelar-edicion {
+    background: #f44336;
+}
+
+/* Tabla */
+.table-container {
+    flex: 1;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+th,
+td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f5f8fd;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Acciones en tabla */
+button.edit-btn,
+button.delete-btn {
+    padding: 0.4rem 0.8rem;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button.edit-btn {
+    background: #ff9900;
+}
+
+button.delete-btn {
+    background: #f44336;
+}
+
+button.edit-btn:hover,
+button.delete-btn:hover {
+    opacity: 0.8;
+}
+
+
+
+nav a {
+    text-decoration: none;
+    margin: 10px;
+    color: #c5defa9f;
+    /* Color azul claro */
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    /* Fondo claro */
+    display: inline-block;
+    /* Hace que los enlaces se muestren uno al lado del otro */
+    width: 150px;
+    /* Da un tamaño fijo a los botones */
+    box-sizing: border-box;
+    /* Asegura que el padding y border no se sumen al ancho */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+nav a:hover {
+    background-color: #4A90E2;
+    /* Fondo azul claro cuando se pasa el mouse */
+    color: white;
+    /* Texto blanco al hacer hover */
+}
+
+nav a.active {
+    background-color: #d0ddec;
+    /* Fondo azul claro para el enlace activo */
+    color: white;
+}
+
+.logout-box {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.logout-link {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    background-color: #e74c3c;
+    padding: 8px 16px;
+    border-radius: 8px;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.logout-link:hover {
+    background-color: #c0392b;
+}

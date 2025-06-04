@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Medicamentos</title>
+    <link rel="stylesheet" href="css/medicamentos.css" />
+</head>
+<body>
+<div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2>TeFaltan<br><span>Pastillas?</span></h2>
+        <nav>
+            <a href="home.html">Inicio</a>
+            <a href="credenciales.html">Credenciales</a>
+            <a href="usuario.html" class="active">Usuario</a>
+        </nav>
+        <div class="gerente-box">
+            <p>¿Eres Gerente de una Farmacia?</p>
+            <button>Regístrate</button>
+        </div>
+        <div class="logout-box">
+            <a href="#" onclick="cerrarSesion()" class="logout-link">Cerrar Sesión</a>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+        <header class="top-bar">
+            <h1>Gestión de Medicamentos</h1>
+            <input type="text" id="buscarMedicamento" placeholder="Buscar medicamento..." />
+        </header>
+
+        <section class="medicamentos-section">
+            <!-- Formulario -->
+            <div class="form-container">
+                <h2 id="form-title">Agregar Medicamento</h2>
+                <form id="medicamento-form">
+                    <input type="hidden" id="medicamento-id" />
+                    <input type="text" id="nombre" placeholder="Nombre" required />
+                    <input type="number" step="0.01" id="precio" placeholder="Precio" required />
+                    <select id="tipo" required>
+                        <option value="">Seleccione Tipo</option>
+                        <option value="recetado">Recetado</option>
+                        <option value="ventalibre">Venta libre</option>
+                    </select>
+                    <button type="submit">Guardar</button>
+                    <button type="reset" id="cancelar-edicion" style="display:none;">Cancelar</button>
+                </form>
+            </div>
+
+            <!-- Tabla -->
+            <div class="table-container">
+                <h2>Lista de Medicamentos</h2>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Tipo</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody id="medicamento-table-body">
+                    <!-- JS insertará aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script src="js/medicamentos.js"></script>
+</body>
+</html>

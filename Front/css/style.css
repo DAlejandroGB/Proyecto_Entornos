@@ -1,7 +1,104 @@
-body{
-    margin: 0;
-    padding: 0;
-    background-position: center center;
-    background-repeat: no-repeat;
-    opacity: 1.9;
+body {
+    background: #e0ecfa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-container {
+    max-width: 900px;
+    margin: 50px auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.login-left {
+    padding: 40px;
+}
+
+.login-title {
+    font-weight: bold;
+    color: #0a3d0a;
+}
+
+.login-form input {
+    border-radius: 8px;
+}
+
+.btn-login {
+    background-color: #d38d00;
+    color: white;
+    border: none;
+}
+
+.btn-login:hover {
+    background-color: #a86f00;
+}
+
+.illustration {
+    background: #d4e7fd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.illustration img {
+    width: 100%;
+}
+
+.text-sm {
+    font-size: 0.9rem;
+}
+
+input.form-check-input:checked {
+    background-color: #d38d00;
+    border-color: #a86f00;
+}
+
+.d-flex {
+    display: block;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.form-container h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-container input,
+.form-container select {
+    width: 100%;
+    padding: 0.8rem;
+    margin: 0.8rem 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.form-container button {
+    width: 100%;
+    padding: 0.8rem;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#cancelar-edicion {
+    background: #f44336;
+}
+
+.modal-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

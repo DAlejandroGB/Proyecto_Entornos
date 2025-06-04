@@ -1,0 +1,371 @@
+.home-container {
+  display: flex;
+  height: 100vh;
+}
+
+
+
+/* Contenido principal */
+.main-content2 {
+  flex: 1;
+  padding: 2rem;
+  width: 70%;
+}
+
+/* Sidebar de ordenes (derecho) */
+.order-sidebar2 {
+  width: 30%;
+  background-color: var(--gray-50);
+  padding: 2rem;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.05);
+}
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.orders-table th, .orders-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--gray-200);
+  text-align: left;
+  font-size: 0.875rem;;
+}
+
+.filter-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.filter-controls button {
+  padding: 0.5rem 1rem;
+  background: var(--primary-blue);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.filter-controls button:hover {
+  background: var(--primary-blue-light);
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  align-items: center;
+}
+
+.pagination button {
+  padding: 0.5rem 1rem;
+  background: var(--gray-200);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background: var(--gray-100);
+  cursor: not-allowed;
+}
+
+.but {
+  padding: 0.5rem 1rem;
+  background: var(--primary-blue);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.but:hover {
+  background: var(--primary-blue-light);
+}
+.detail-box {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px #ddd;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.medicamentos-list {
+  list-style: none;
+  padding: 0;
+}
+
+.medicamento-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0.5rem;
+}
+
+.medicamento-imagen {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.orden-medica-imagen {
+  max-width: 150px;
+  margin-top: 0.5rem;
+  border: 1px solid #aaa;
+}
+
+.medicamentos-detalle-box {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 1rem;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.medicamentos-titulo {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  position: relative;
+}
+
+.medicamentos-titulo::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+  border-radius: 2px;
+}
+
+.medicamentos-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.medicamento-item {
+  margin-bottom: 1.5rem;
+}
+
+.imagen-orden-medica {
+  width: 100%;
+  max-width: 300px;
+  border-radius: var(--border-radius);
+  margin-top: 0.5rem;
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow);
+}
+
+.tabla-scrollable {
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  background: var(--white);
+}
+
+/* Tabla medicamentos */
+.tabla-medicamentos {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  background-color: var(--white);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.tabla-medicamentos th {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+  color: var(--white);
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  text-align: center;
+  border-bottom: 1px solid var(--gray-300);
+}
+
+.tabla-medicamentos td {
+  padding: 0.75rem 1rem;
+  background-color: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  text-align: center;
+  color: var(--gray-700);
+  font-weight: 500;
+}
+
+.tabla-medicamentos tr:nth-child(even) td {
+  background-color: var(--gray-100);
+}
+
+/* Botón ver orden */
+.btn-ver-orden {
+  background: linear-gradient(135deg, var(--green) 0%, #34d399 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ver-orden::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-ver-orden:hover::before {
+  left: 100%;
+}
+
+.btn-ver-orden:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(17, 24, 39, 0.6); /* var(--gray-900) transparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(2px); /* Efecto sutil de desenfoque */
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-contenido {
+  background: linear-gradient(135deg, var(--white) 0%, var(--gray-50) 100%);
+  padding: 2rem;
+  border-radius: var(--border-radius-lg);
+  position: relative;
+  max-width: 600px;
+  max-height: 90vh;
+  width: 90%;
+  overflow-y: auto;
+  box-shadow: var(--shadow-xl);
+  animation: scaleIn 0.3s ease-in-out;
+}
+
+.imagen-modal {
+  width: 100%;
+  height: auto;
+  max-height: 70vh;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  object-fit: contain;
+}
+
+.modal-cerrar {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  color: var(--gray-500);
+  cursor: pointer;
+  transition: var(--transition);
+  background-color: transparent;
+  border: none;
+}
+
+.modal-cerrar:hover {
+  color: var(--red);
+  transform: scale(1.1);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.action-buttons {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end; /* Alinea los botones a la derecha */
+  flex-wrap: wrap; /* Para que no se desborden en pantallas pequeñas */
+}
+
+.action-buttons button {
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: var(--border-radius);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+  color: var(--white);
+  position: relative;
+  overflow: hidden;
+}
+
+.action-buttons button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.action-buttons button:hover::before {
+  left: 100%;
+}
+
+.action-buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.action-buttons button:disabled {
+  opacity: 0.6;
+  background: var(--gray-300);
+  color: var(--gray-600);
+  cursor: not-allowed;
+  box-shadow: none;
+}

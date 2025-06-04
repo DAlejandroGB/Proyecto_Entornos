@@ -1,0 +1,83 @@
+<!-- usuario.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Usuarios</title>
+    <link rel="stylesheet" href="css/usuario.css" /> <!-- Asumo que ya tienes este -->
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>TeFaltan<br><span>Pastillas?</span></h2>
+            <nav>    
+                <a href="home.html">Inicio</a>
+                <a href="credenciales.html">Credenciales</a>
+                <a href="medicamentos.html">Medicamentos</a>
+            </nav>
+            <div class="gerente-box">
+                <p>¿Eres Gerente de una Farmacia?</p>
+                <button>Regístrate</button>
+            </div>
+            <div class="logout-box">
+                <a href="#" onclick="cerrarSesion()" class="logout-link">Cerrar Sesión</a>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="main">
+            <header class="top-bar">
+                <h1>Gestión de Usuarios</h1>
+                <input type="text" placeholder="Buscar usuario..." />
+            </header>
+
+            <section class="users-section" style="display: flex; gap: 2rem; padding: 1rem;">
+                <!-- Formulario -->
+                <div class="form-container">
+                    <h2 id="form-title">Agregar Usuario</h2>
+                    <form id="usuario-form">
+                        <input type="hidden" id="usuario-id" />
+                        <input type="text" id="nombre" placeholder="Nombre" required />
+                        <input type="text" id="apellido" placeholder="Apellido" required />
+                        <input type="email" id="email" placeholder="Email" required />
+                        <input type="text" id="telefono" placeholder="Teléfono" />
+                        <input type="text" id="direccion" placeholder="Dirección" />
+                        <select id="rol" required>
+                            <option value="">Seleccione Rol</option>
+                            <option value="gerente">Gerente</option>
+                            <option value="cliente">Cliente</option>
+                        </select>
+                        <button type="submit">Guardar</button>
+                        <button type="reset" id="cancelar-edicion" style="display:none;">Cancelar</button>
+                    </form>
+                </div>
+
+                <!-- Tabla -->
+                <div class="table-container">
+                    <h2>Lista de Usuarios</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Dirección</th>
+                                <th>Rol</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usuario-table-body">
+                            <!-- JS insertará aquí -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/usuario.js"></script>
+</body>
+</html>
