@@ -20,6 +20,7 @@ public class Medicamento {
     private String imagen;
     @Column(name = "venta_libre")
     private Boolean ventaLibre;
+    private Boolean activo;
 
     public Medicamento(CrearMedicamentoDTO crearMedicamentoDTO) {
         this.nombre = crearMedicamentoDTO.getNombre();
