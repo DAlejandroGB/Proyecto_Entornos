@@ -55,8 +55,8 @@ public class OrdenController {
 
     @Operation(summary = "Listar ordenes por estado")
     @GetMapping("/{estado}")
-    public ResponseEntity<Page<Orden>> getAllOrdenesByEstado(@PathVariable("estado") String estado, Pageable pageable) {
-        Page<Orden> ordenes = this.ordenService.getAllOrdenesByEstado(estado, pageable);
+    public ResponseEntity<Page<OrdenDTO>> getAllOrdenesByEstado(@PathVariable("estado") String estado, Pageable pageable) {
+        Page<OrdenDTO> ordenes = this.ordenService.getAllOrdenesByEstado(estado, pageable);
         if (ordenes.isEmpty()) { return new ResponseEntity<>(HttpStatus.NOT_FOUND); }
         return new ResponseEntity<>(ordenes, HttpStatus.OK);
     }
@@ -78,8 +78,6 @@ public class OrdenController {
     public ResponseEntity<OrdenDTO> cargarReciboPago(@RequestParam Long idOrden, @RequestPart(value = "reciboPago") MultipartFile reciboPago) throws IOException {
         return new ResponseEntity<>(this.ordenService.cargarReciboPago(idOrden, reciboPago), HttpStatus.OK);
     }
-
-
 
     @Autowired
     public void setOrdenService(IOrdenService ordenService) {

@@ -20,7 +20,7 @@ public interface IOrdenService {
 
     OrdenDTO getOrden(Long idOrden);
 
-    Page<Orden> getAllOrdenesByEstado(String estado, Pageable pageable);
+    Page<OrdenDTO> getAllOrdenesByEstado(String estado, Pageable pageable);
 
     Orden updateEstadoOrden(Long idOrden, String estado);
 
