@@ -15,6 +15,7 @@ const Perfil = () => {
   const [telefono, setTelefono] = useState('');
   const [email, setEmail] = useState('');
   const [mensaje, setMensaje] = useState('');
+  const [rol, setRol] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,6 +39,7 @@ const Perfil = () => {
         setDireccion(usuario.direccion || '');
         setTelefono(usuario.telefono || '');
         setEmail(usuario.email || '');
+        setRol(usuario.rol || '');
       })
       .catch(err => {
         console.error('Error al obtener datos del usuario:', err);
@@ -86,9 +88,11 @@ const Perfil = () => {
         <h1 className="logo">TeFaltan <span className="highlight">Pastillas?</span></h1>
         <nav>
           <ul>
-            <li onClick={() => navigate('/Home')}>Inicio</li>
+            <li onClick={() => navigate(rol === 'GERENTE' ? '/management' : '/home')}>
+              Inicio
+            </li>
             <li className="active">Usuario</li>
-            <li onClick={() => navigate('/historial')}>Historial</li>
+            <li onClick={() => navigate(rol === 'GERENTE' ? '/ordenes' : '/historial')}>{rol === 'GERENTE' ? 'Ordenes' : 'Historial'}</li>
           </ul>
         </nav>
         <div className="register-box">

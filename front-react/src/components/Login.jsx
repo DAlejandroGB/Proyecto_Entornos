@@ -52,7 +52,7 @@ export default function Login() {
 
       const data = await response.json();
       console.log('Respuesta del servidor:', data);
-      
+
       if (data && data.token) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('userData', JSON.stringify({
@@ -60,7 +60,12 @@ export default function Login() {
           nombreUsuario: data.nombreUsuario,
           rolUsuario: data.rolUsuario
         }));
-        navigate('/home');
+        // navigate('/home');
+        if (data.rolUsuario === "CLIENTE") {
+          navigate('/home');
+        }else if(data.rolUsuario === "GERENTE"){
+          navigate('/management')
+        }
       } else {
         throw new Error('Respuesta inválida del servidor');
       }
@@ -112,16 +117,16 @@ export default function Login() {
               </div>
               {error && <div className="error-message">{error}</div>}
               <div className="form-buttons">
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="btn-login"
                   disabled={isLoading}
                 >
                   {isLoading ? 'Iniciando sesión...' : 'INICIAR SESIÓN'}
                 </button>
-                <button 
-                  type="button" 
-                  className="btn-signup" 
+                <button
+                  type="button"
+                  className="btn-signup"
                   onClick={() => navigate('/register')}
                   disabled={isLoading}
                 >

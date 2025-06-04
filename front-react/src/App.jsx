@@ -4,6 +4,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Home from './components/Home';
 import Perfil from './components/Perfil';
+import Manager from './components/Manager';
 
 const theme = createTheme({
   palette: {
@@ -50,6 +51,14 @@ export default function App() {
             element={
               <PrivateRoute>
                 <Perfil />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/management"
+            element={
+              <PrivateRoute>
+                <Manager />
               </PrivateRoute>
             }
           />
