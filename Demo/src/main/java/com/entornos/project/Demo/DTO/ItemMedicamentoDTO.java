@@ -21,4 +21,5 @@ public class ItemMedicamentoDTO {
     private Integer cantidad;
     @Schema(name = "ordenMedicamento", description = "Url de la orden médica si aplica para el medicamento")
     private String ordenMedicamento;
+    private Boolean activo;
 }
