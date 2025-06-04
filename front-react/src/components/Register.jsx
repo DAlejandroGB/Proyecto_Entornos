@@ -149,7 +149,7 @@ export default function Register() {
         <div className="register-container">
           <h3 className="login-title">
             <span>¿</span>
-            TeFaltanPastillas
+          TeFaltanPastillas
             <span>?</span>
           </h3>
           {activeStep === 0 ? (
@@ -159,10 +159,10 @@ export default function Register() {
                 <input
                   type="text"
                   id="nombre"
-                  name="nombre"
+                    name="nombre"
                   placeholder="Nombre"
-                  value={userData.nombre}
-                  onChange={handleUserDataChange}
+                    value={userData.nombre}
+                    onChange={handleUserDataChange}
                   required
                 />
               </div>
@@ -171,10 +171,10 @@ export default function Register() {
                 <input
                   type="text"
                   id="apellido"
-                  name="apellido"
+                    name="apellido"
                   placeholder="Apellido"
-                  value={userData.apellido}
-                  onChange={handleUserDataChange}
+                    value={userData.apellido}
+                    onChange={handleUserDataChange}
                   required
                 />
               </div>
@@ -183,10 +183,10 @@ export default function Register() {
                 <input
                   type="email"
                   id="email"
-                  name="email"
+                    name="email"
                   placeholder="correo@ejemplo.com"
-                  value={userData.email}
-                  onChange={handleUserDataChange}
+                    value={userData.email}
+                    onChange={handleUserDataChange}
                   required
                 />
               </div>
@@ -195,10 +195,10 @@ export default function Register() {
                 <input
                   type="tel"
                   id="telefono"
-                  name="telefono"
+                    name="telefono"
                   placeholder="Teléfono"
-                  value={userData.telefono}
-                  onChange={handleUserDataChange}
+                    value={userData.telefono}
+                    onChange={handleUserDataChange}
                 />
               </div>
               <div className="form-group">
@@ -206,10 +206,10 @@ export default function Register() {
                 <input
                   type="text"
                   id="direccion"
-                  name="direccion"
+                    name="direccion"
                   placeholder="Dirección"
-                  value={userData.direccion}
-                  onChange={handleUserDataChange}
+                    value={userData.direccion}
+                    onChange={handleUserDataChange}
                 />
               </div>
               <div className="form-group">
@@ -243,10 +243,10 @@ export default function Register() {
                 <input
                   type="text"
                   id="usuarioNombre"
-                  name="usuarioNombre"
+                    name="usuarioNombre"
                   placeholder="username"
-                  value={credentialData.usuarioNombre}
-                  onChange={handleCredentialChange}
+                    value={credentialData.usuarioNombre}
+                    onChange={handleCredentialChange}
                   required
                 />
               </div>
@@ -255,10 +255,10 @@ export default function Register() {
                 <input
                   type="password"
                   id="contrasena"
-                  name="contrasena"
+                    name="contrasena"
                   placeholder="********"
-                  value={credentialData.contrasena}
-                  onChange={handleCredentialChange}
+                    value={credentialData.contrasena}
+                    onChange={handleCredentialChange}
                   required
                 />
               </div>

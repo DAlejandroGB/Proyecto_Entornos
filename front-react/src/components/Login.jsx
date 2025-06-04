@@ -76,64 +76,64 @@ export default function Login() {
     <>
       <div className="animated-background"></div>
       <div className="login-wrapper">
-        <div className="login-container">
-          <div className="login-left">
-            <h3 className="login-title">
-              <span>¿</span>
-              TeFaltanPastillas
-              <span>?</span>
-            </h3>
-            <form className="login-form" onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label htmlFor="nombreUsuario">Nombre de usuario *</label>
-                <input
-                  type="text"
-                  id="nombreUsuario"
-                  name="nombreUsuario"
-                  placeholder="username"
-                  value={formData.nombreUsuario}
-                  onChange={handleChange}
-                  required
-                  disabled={isLoading}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="password">Contraseña *</label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="********"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  disabled={isLoading}
-                />
-              </div>
-              {error && <div className="error-message">{error}</div>}
-              <div className="form-buttons">
-                <button 
-                  type="submit" 
-                  className="btn-login"
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Iniciando sesión...' : 'INICIAR SESIÓN'}
-                </button>
-                <button 
-                  type="button" 
-                  className="btn-signup" 
-                  onClick={() => navigate('/register')}
-                  disabled={isLoading}
-                >
-                  REGISTRATE
-                </button>
-              </div>
-            </form>
+    <div className="login-container">
+      <div className="login-left">
+        <h3 className="login-title">
+          <span>¿</span>
+          TeFaltanPastillas
+          <span>?</span>
+        </h3>
+        <form className="login-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="nombreUsuario">Nombre de usuario *</label>
+            <input
+              type="text"
+              id="nombreUsuario"
+              name="nombreUsuario"
+              placeholder="username"
+              value={formData.nombreUsuario}
+              onChange={handleChange}
+              required
+              disabled={isLoading}
+            />
           </div>
-          <div className="login-right">
-            <img src="/images/fondo_login.jpg" alt="Medicinas" className="medicine-icon" />
+          <div className="form-group">
+            <label htmlFor="password">Contraseña *</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="********"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              disabled={isLoading}
+            />
           </div>
-        </div>
+          {error && <div className="error-message">{error}</div>}
+          <div className="form-buttons">
+            <button 
+              type="submit" 
+              className="btn-login"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Iniciando sesión...' : 'INICIAR SESIÓN'}
+            </button>
+            <button 
+              type="button" 
+              className="btn-signup" 
+              onClick={() => navigate('/register')}
+              disabled={isLoading}
+            >
+              REGISTRATE
+            </button>
+          </div>
+        </form>
+      </div>
+      <div className="login-right">
+        <img src="/images/fondo_login.jpg" alt="Medicinas" className="medicine-icon" />
+      </div>
+    </div>
       </div>
     </>
   );
