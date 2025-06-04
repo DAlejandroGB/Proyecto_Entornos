@@ -62,7 +62,7 @@ public class OrdenController {
     }
 
     @Operation(summary = "Obtener detalles de la orden por id")
-    @GetMapping("/{idOrden}")
+    @GetMapping("/idorden/{idOrden}")
     public ResponseEntity<OrdenDTO> getOrdenById(@PathVariable("idOrden") Long idOrden) {
         return new ResponseEntity<>(this.ordenService.getOrden(idOrden), HttpStatus.OK);
     }
